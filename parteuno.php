@@ -1,7 +1,7 @@
 <?php
 /*Una Feria
 •	Abre todos los días de 15 a 2.
-•	Cuenta con 15 juegos, 3 grandes, 5 medianos y 7 pequeños
+•	Cuenta con 15 juegos, 3 grandes, 5 medianos y 7 pequeños 
 •	Todos los juegos deben funcionar el fin de semana, el mantenimiento se realiza después de 5 días de uso, y en 
     los juegos grandes dura 3 días, en los medianos 2 y los pequeños 1.
 •	Cada juego tiene un límite de usuarios por ejecución, los grandes tienen un límite de entre 20 y 30, los medianos entre 10 y 20 y los pequeños entre 5 y 10.
@@ -16,57 +16,66 @@ salir del juego se demoran entre 1 y 3 minutos por cada 5 personas.
 •	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700
 */ 
 
-interface FuncionesEnComun{
-
-
-    //funciones en comun
-
-    //duracion de cada juego
-    function duraciondejuego();
-
-    //funcion para mantenimiento de juegos
-    function mantenimiento();
-   
-    //limites de persona
-    function limitesdeusuarios();
-
-    // para la cola o espera
-    function espera();
-
-    //funcion para correr juegos
-    function correrJuego();
-   
-    //para terminar el juego
-    function terminarjuego();
-}
-
-abstract class ManejoNombres{
-    
-    abstract public function asignarNombres(string $nombres): void;
-    abstract public function mostrarNombres(): array;
-
-}
-
-
-class Feria extends ManejoNombres implements FuncionesEnComun{
+class Feria{
     public $nombres;
     public $dias;
     public $precioentrada;
     public $ubicacion;
     public $tiempo;
+    
+    CONST NOMBRESJUEGOS = [
+        "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
+        "JuegosMedianos" => ["Carrusel", "SillasVoladoras", "TazasLocas", "BarcoPirata", "TrendelaMina", "CasadelTerror"],
+        "JuegosPequeños" => ["MiniCarrusel", "Saltamontes", "Caballitos", "TrenInfantil","Mini Noria", "Rueditas","Coches de Choque"]
+        
+    ];
 
     function __construct($nombres,$dias){
         $this->nombres = $nombres;
         $this->dias = $dias;
     }
-    function asignarNombres(string $nombres):void{
+    function asignarNombres($nombres){
         $this->nombres[] = $nombres; 
      }
-     function mostrarNombres():array{
+     function mostrarNombres(){
          return $this->nombres;
      }
+     
+    // Duración de cada juego
+    function duraciondejuego(){
+        // Supongamos que tenemos una lista de juegos con sus respectivas duraciones en minutos
+      
+    }
+
+    //funcion para mantenimiento de juegos
+    public function mantenimiento(){
+
+    }
+   
+    //limites de persona
+    public function limitesdeusuarios(){
+
+    }
+
+    // para la cola o espera
+    public function espera(){
+
+    }
+
+    //funcion para correr juegos
+    public function correrJuego(){
+
+    }
+   
+    //para terminar el juego
+    public function terminarjuego(){
+
+    }
 }
-class JuegosGrandes extends ManejoNombres{
+
+
+
+class JuegosGrandes extends Feria{
 
     protected array $nombresgrandes = [];
     
@@ -74,20 +83,14 @@ class JuegosGrandes extends ManejoNombres{
         array_push($this->nombresgrandes,$nombresgrandes);
     }
 
-    function asignarNombres(string $nombres):void{
-       $this->nombresgrandes[] = $nombres; 
-    }
-    function mostrarNombres():array{
-        return $this->nombresgrandes;
-    }
 
 
 }
-class JuegosMedianos{
+class JuegosMedianos extends Feria{
 
 }
 
-class JuegosPequeños{
+class JuegosPequeños extends Feria{
 
 }
 
