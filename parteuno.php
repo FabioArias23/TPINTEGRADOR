@@ -7,39 +7,31 @@
 •	Cada juego tiene un límite de usuarios por ejecución, los grandes tienen un límite de entre 20 y 30, los medianos entre 10 y 20 y los pequeños entre 5 y 10.
 •	El uso de los juegos dura 5 minutos para los grandes, 7 para los medianos y 10 para los pequeños, al ingresar y 
 salir del juego se demoran entre 1 y 3 minutos por cada 5 personas.
-•	Las personas tienen una preferencia del 50% por los juegos grandes, 30% por los medianos y 20% por los pequeños. Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juego.
+•	Las personas tienen una preferencia del 50% por los juegos grandes, 30% por los medianos y 20% por los pequeños.
+Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juego.
 •	Cada persona tiene un presupuesto entre $30 y $200.
 •	El precio de los juegos grandes es de $20, de los medianos de $15 y los pequeños $10.
 •	Una vez que se termina su dinero se retira o después de subir a al menos 5 juegos.
 •	Puede subirse al mismo juego varias veces.
 •	Las personas llegan en grupos de entre 0 y 5 entre las 15 y las 20 cada 10 minutos, de 3 a 8 entre las 20 y las 23 y de entre 1 a 4 entre las 23 y las 2
-•	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700
+•	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700.
 */ 
 
 class Feria{
     public $juegosGrandes = [];
     public $juegosMedianos = [];
     public $juegosChicos = [];
-    public $dias;
-    public $precioentrada;
-    public $tiempo;
     
     CONST NOMBRESJUEGOS = [
         "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
         "JuegosMedianos" => ["Carrusel", "SillasVoladoras", "TazasLocas", "BarcoPirata", "TrendelaMina", "CasadelTerror"],
         "JuegosPequeños" => ["MiniCarrusel", "Saltamontes", "Caballitos", "TrenInfantil","Mini Noria", "Rueditas","Coches de Choque"]
-        
-    ];
+        ];
 
     /*function __construct($dias){
         $this->dias = $dias;
     }*/
 
-    // Duración de cada juego
-    function duraciondejuego(){
-        // Supongamos que tenemos una lista de juegos con sus respectivas duraciones en minutos
-      
-    }
     public function agreagar_juego_grande($nombre){
         $this->juegosGrandes []= new JuegosGrandes($nombre);
 
@@ -85,18 +77,25 @@ class JuegosGrandes {
     public $capacidad;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
-
     }
-
-
 
 }
 class JuegosMedianos {
-
+    public $nombre;
+    public $duracion = 7;
+    public $capacidad;
+    function __construct($nombres){
+        array_push($this->nombre,$nombres);
+    }
 }
 
 class JuegosPequeños {
-
+    public $nombre;
+    public $duracion = 10;
+    public $capacidad;
+    function __construct($nombres){
+        array_push($this->nombre,$nombres);
+    }
 }
 
 ?>
