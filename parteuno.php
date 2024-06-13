@@ -17,10 +17,11 @@ salir del juego se demoran entre 1 y 3 minutos por cada 5 personas.
 */ 
 
 class Feria{
-    public $nombres;
+    public $juegosGrandes = [];
+    public $juegosMedianos = [];
+    public $juegosChicos = [];
     public $dias;
     public $precioentrada;
-    public $ubicacion;
     public $tiempo;
     
     CONST NOMBRESJUEGOS = [
@@ -30,21 +31,24 @@ class Feria{
         
     ];
 
-    function __construct($nombres,$dias){
-        $this->nombres = $nombres;
+    /*function __construct($dias){
         $this->dias = $dias;
-    }
-    function asignarNombres($nombres){
-        $this->nombres[] = $nombres; 
-     }
-     function mostrarNombres(){
-         return $this->nombres;
-     }
-     
+    }*/
+
     // Duración de cada juego
     function duraciondejuego(){
         // Supongamos que tenemos una lista de juegos con sus respectivas duraciones en minutos
       
+    }
+    public function agreagar_juego_grande($nombre){
+        $this->juegosGrandes []= new JuegosGrandes($nombre);
+
+    }
+    public function agreagar_juego_mediano($nombre){
+        $this->juegosMedianos []= new JuegosMedianos($nombre);
+    }
+    public function agreagar_juego_pequeños($nombre){
+        $this->juegosChicos []= new JuegosPequeños($nombre);
     }
 
     //funcion para mantenimiento de juegos
@@ -75,22 +79,23 @@ class Feria{
 
 
 
-class JuegosGrandes extends Feria{
+class JuegosGrandes {
+    public $nombre;
+    public $duracion = 5;
+    public $capacidad;
+    function __construct($nombres){
+        array_push($this->nombre,$nombres);
 
-    protected array $nombresgrandes = [];
-    
-    function __construct($nombresgrandes){
-        array_push($this->nombresgrandes,$nombresgrandes);
     }
 
 
 
 }
-class JuegosMedianos extends Feria{
+class JuegosMedianos {
 
 }
 
-class JuegosPequeños extends Feria{
+class JuegosPequeños {
 
 }
 
