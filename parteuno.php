@@ -22,7 +22,7 @@ class Feria{
     public $juegosMedianos = [];
     public $juegosChicos = [];
     public $horarioapertura = Datetime::__set_state("15:00");
-    
+    //dale pe causa tirame un commit
     CONST NOMBRESJUEGOS = [
         "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
         "JuegosMedianos" => ["Carrusel", "SillasVoladoras", "TazasLocas", "BarcoPirata", "TrendelaMina", "CasadelTerror"],
