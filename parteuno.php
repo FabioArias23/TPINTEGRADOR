@@ -21,6 +21,7 @@ class Feria{
     public $juegosGrandes = [];
     public $juegosMedianos = [];
     public $juegosChicos = [];
+    public $horarioapertura = Datetime::__set_state("15:00");
     
     CONST NOMBRESJUEGOS = [
         "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
@@ -74,7 +75,8 @@ class Feria{
 class JuegosGrandes {
     public $nombre;
     public $duracion = 5;
-    public $capacidad;
+    public $capacidadmin = 20;
+    public $capacidadmax = 30;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
@@ -83,7 +85,8 @@ class JuegosGrandes {
 class JuegosMedianos {
     public $nombre;
     public $duracion = 7;
-    public $capacidad;
+    public $capacidadmin = 10;
+    public $capacidadmax = 20;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
@@ -92,10 +95,13 @@ class JuegosMedianos {
 class JuegosPequeños {
     public $nombre;
     public $duracion = 10;
-    public $capacidad;
+    public $capacidadmin = 5;
+    public $capacidadmax = 10;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
 }
-
+class persona{
+    public $platita = random_int(30,200);
+}
 ?>
