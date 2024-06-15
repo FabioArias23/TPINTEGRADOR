@@ -17,11 +17,32 @@ Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juego.
 •	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700.
 */ 
 
+/* PODEMOS IMPLENTAR ESTE CODIGO PARA CONTROLAR EL TIEMPO CON EL OBJETO DATETIME QUE DICEN PE CONCHASUMARE
+ * $fechaInicio = new DateTime('2024-06-01');
+
+ Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
+$fechaFinal = clone $fechaInicio;
+$fechaFinal->modify('+1 month');
+
+Simulamos el tiempo minuto a minuto
+while ($fechaInicio < $fechaFinal) {
+    // Realiza tus acciones aquí (por ejemplo, muestra la hora actual)
+    echo 'Hora actual: ' . $fechaInicio->format('Y-m-d H:i:s') . PHP_EOL;
+
+    // Incrementa 1 minuto
+    $fechaInicio->modify('+1 minute');
+
+}
+
+echo 'Simulación finalizada.';
+ */
+
 class Feria{
     public $juegosGrandes = [];
     public $juegosMedianos = [];
     public $juegosChicos = [];
-    public $horarioapertura = Datetime::__set_state("15:00");
+    public $fechadeinicio = new DateTime("2024-06-02");
+    public $fechadeFin = new DateTime();
     //dale pe causa tirame un commit
     // costo el commit pe causita mucho codigo pa tu chimba pe 
     CONST NOMBRESJUEGOS = [
@@ -105,4 +126,5 @@ class JuegosPequeños {
 class persona{
     public $platita = random_int(30,200);
 }
+
 ?>
