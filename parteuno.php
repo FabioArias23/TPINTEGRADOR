@@ -24,7 +24,8 @@ class Parque_Diversiones{
     public $juegosMedianos = [];
     public $juegosChicos = [];
     public $personas = [];
-   
+    public $empleados = 25;
+    public $sueldos = 700;
     /* CONST NOMBRESJUEGOS = [
         "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
         "JuegosMedianos" => ["Carrusel", "SillasVoladoras", "TazasLocas", "BarcoPirata", "TrendelaMina", "CasadelTerror"],
@@ -80,18 +81,24 @@ class JuegosGrandes {
     public $duracion = 5;
     public $capacidadmin = 20;
     public $capacidadmax = 30;
-public $precio = 20;
+    public $diasUso = 0;
+    public $enMantenimiento = false;
+    public $diaFinMantenimiento;
+    public $precio = 20;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
 
-}
+    }
 class JuegosMedianos {
     public $nombre;
     public $duracion = 7;
     public $capacidadmin = 10;
     public $capacidadmax = 20;
-public $precio = 15;
+    public $precio = 15;
+    public $diasUso = 0;
+    public $enMantenimiento = false;
+    public $diaFinMantenimiento;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
@@ -103,6 +110,9 @@ class JuegosPequeños {
     public $capacidadmin = 5;
     public $capacidadmax = 10;
     public $precio = 10;
+    public $diasUso = 0;
+    public $enMantenimiento = false;
+    public $diaFinMantenimiento;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
@@ -157,5 +167,24 @@ if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
     $fechaInicio->modify('+1 minute');
 
 }
+$LinkinPark = new Parque_Diversiones();
+$LinkinPark->agreagar_juego_grande("MontañaRusa");
+$LinkinPark->agreagar_juego_grande("RuedaDeLaFortuna");
+$LinkinPark->agreagar_juego_grande("EVOLUTION");
+$LinkinPark->agreagar_juego_mediano("Carrusel");
+$LinkinPark->agreagar_juego_mediano("SillasVoladoras");
+$LinkinPark->agreagar_juego_mediano("TazasLocas");
+$LinkinPark->agreagar_juego_mediano("BarcoPirata");
+$LinkinPark->agreagar_juego_mediano("TrendelaMina");
+$LinkinPark->agreagar_juego_pequeños("MiniCarrusel");
+$LinkinPark->agreagar_juego_pequeños("Saltamontes");
+$LinkinPark->agreagar_juego_pequeños("Caballitos");
+$LinkinPark->agreagar_juego_pequeños("TrenInfantil");
+$LinkinPark->agreagar_juego_pequeños("MiniNoria");
+$LinkinPark->agreagar_juego_pequeños("Rueditas");
+$LinkinPark->agreagar_juego_pequeños("CochesdeChoque");
+
+
+
  var_dump($LinkinPark->personas);
 ?>
