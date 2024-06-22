@@ -46,10 +46,38 @@ class Parque_Diversiones{
     }
 
     //funcion para mantenimiento de juegos
-    public function mantenimiento(){
-
+    
+    public function mantenimiento($diaActual) {
+        $this->verificarMantenimiento($this->juegosGrandes, 5, 3, $diaActual);
+        $this->verificarMantenimiento($this->juegosMedianos, 5, 2, $diaActual);
+        $this->verificarMantenimiento($this->juegosChicos, 5, 1, $diaActual);
     }
-   
+
+    private function verificarMantenimiento(&$juegos, $diasUso, $diasMantenimiento, $diaActual) {
+        foreach ($juegos as $juego) {
+            if ($juego->enMantenimiento) {
+                if ($juego->diaFinMantenimiento <= $diaActual) {
+                    $juego->enMantenimiento = false;
+                }
+            } else {
+                if ($juego->diasUso >= $diasUso) {
+                    $juego->enMantenimiento = true;
+                    $juego->diaFinMantenimiento = $diaActual + $diasMantenimiento;
+                    $juego->diasUso = 0;
+                }
+            }
+        }
+    }
+
+    // funcion para correr juegos
+    public function correrJuego() {
+        foreach (array_merge($this->juegosGrandes, $this->juegosMedianos, $this->juegosChicos) as $juego) {
+            if (!$juego->enMantenimiento) {
+                $juego->diasUso++;
+            }
+        }
+    }
+
     //limites de persona
     public function limitesdeusuarios(){
 
@@ -60,10 +88,7 @@ class Parque_Diversiones{
 
     }
 
-    //funcion para correr juegos
-    public function correrJuego(){
-
-    }
+    
    
     //para terminar el juego
     public function terminarjuego(){
@@ -167,12 +192,20 @@ if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
         $minutosacum++;
 
     }
+     // Correr los juegos y verificar mantenimiento
+     $LinkinPark->correrJuego();
+     $LinkinPark->mantenimiento($diasUso);
+ 
+     // Incrementar el día de uso cada 24 horas
+     if ($fechaInicio->format('H:i') == '00:00') {
+         $diasUso++;
+     }
+ 
 
     // Incrementa 1 minuto
     $fechaInicio->modify('+1 minute');
 
 }
-$LinkinPark = new Parque_Diversiones();
 $LinkinPark->agreagar_juego_grande("MontañaRusa");
 $LinkinPark->agreagar_juego_grande("RuedaDeLaFortuna");
 $LinkinPark->agreagar_juego_grande("EVOLUTION");
