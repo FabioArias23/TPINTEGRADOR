@@ -23,6 +23,7 @@ class Parque_Diversiones{
     public $juegosGrandes = [];
     public $juegosMedianos = [];
     public $juegosChicos = [];
+    public $personas = [];
    
     /* CONST NOMBRESJUEGOS = [
         "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
@@ -30,9 +31,6 @@ class Parque_Diversiones{
         "JuegosPequeños" => ["MiniCarrusel", "Saltamontes", "Caballitos", "TrenInfantil","Mini Noria", "Rueditas","Coches de Choque"]
         ];
  */
-    /*function __construct($dias){
-        $this->dias = $dias;
-    }*/
 
     public function agreagar_juego_grande($nombre){
         $this->juegosGrandes []= new JuegosGrandes($nombre);
@@ -68,6 +66,10 @@ class Parque_Diversiones{
     //para terminar el juego
     public function terminarjuego(){
 
+    }
+
+    public function agregarpersonas(){
+        $this->personas []= new persona();
     }
 }
 
@@ -108,31 +110,52 @@ class JuegosPequeños {
 class persona{
     public $platita;
 
-    function __construc(){
+    function __construct(){
         $this->platita = random_int(30,200);
     }
 }
 //instanciacion de nuestro Parque
-$Marcelocolarota = new Parque_Diversiones;
+$LinkinPark = new Parque_Diversiones;
 $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
-$fechaFinal->modify('+1 month');
+$fechaFinal->modify('+1 day');
 $Apertura = 15;
 $Cierre = 2;
-
+$dado;$minutosacum=0;
 //Simulamos el tiempo minuto a minuto
 while ($fechaInicio < $fechaFinal) {
     $horaActual = (int) $fechaInicio->format('H'); //(int) operador de casting 
     //condicion para ver si estamos dentro de la franja horaria o sea cuando nuestro parque esta abierto
-if ($horaActual >= $Apertura || $horaActual < $Cierre) {
-        /* echo 'Hora actual: ' . $fechaInicio->format('Y-m-d H:i:s') . PHP_EOL; */
+if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
 
+        //Simulamos la llegada de personas en la primera tanda de 0 a 5 cada 10 min
+        if ($horaActual >= 15 && $horaActual <= 20 && $minutosacum == 10) {
+            $dado = random_int(0, 5);
+            for ($i=0; $i < $dado; $i++) { 
+                $LinkinPark->agregarpersonas();
+            }
+            $minutosacum = 0;
+        }elseif($horaActual > 20 && $horaActual <= 23 && $minutosacum == 10){
+            $dado = random_int(3, 8);
+            for ($i=0; $i < $dado; $i++) { 
+                $LinkinPark->agregarpersonas();
+            }
+            $minutosacum = 0;
+        }elseif($horaActual > 23 && $minutosacum == 10){
+            $dado = random_int(1, 4);
+            for ($i=0; $i < $dado; $i++) { 
+                $LinkinPark->agregarpersonas();
+            }
+            $minutosacum = 0;
+        }
+        $minutosacum++;
 
     }
+
     // Incrementa 1 minuto
     $fechaInicio->modify('+1 minute');
 
 }
-echo 'Simulación finalizada.';
+ var_dump($LinkinPark->personas);
 ?>
