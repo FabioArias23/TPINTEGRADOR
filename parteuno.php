@@ -17,40 +17,19 @@ Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juego.
 •	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700.
 */ 
 
-/* PODEMOS IMPLENTAR ESTE CODIGO PARA CONTROLAR EL TIEMPO CON EL OBJETO DATETIME QUE DICEN PE CONCHASUMARE
- * $fechaInicio = new DateTime('2024-06-01');
 
- Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
-$fechaFinal = clone $fechaInicio;
-$fechaFinal->modify('+1 month');
 
-Simulamos el tiempo minuto a minuto
-while ($fechaInicio < $fechaFinal) {
-    // Realiza tus acciones aquí (por ejemplo, muestra la hora actual)
-    echo 'Hora actual: ' . $fechaInicio->format('Y-m-d H:i:s') . PHP_EOL;
-
-    // Incrementa 1 minuto
-    $fechaInicio->modify('+1 minute');
-
-}
-
-echo 'Simulación finalizada.';
- */
-
-class Feria{
+class Parque_Diversiones{
     public $juegosGrandes = [];
     public $juegosMedianos = [];
     public $juegosChicos = [];
-    public $fechadeinicio = new DateTime("2024-06-02");
-    public $fechadeFin = new DateTime();
-    //dale pe causa tirame un commit
-    // costo el commit pe causita mucho codigo pa tu chimba pe 
-    CONST NOMBRESJUEGOS = [
+   
+    /* CONST NOMBRESJUEGOS = [
         "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
         "JuegosMedianos" => ["Carrusel", "SillasVoladoras", "TazasLocas", "BarcoPirata", "TrendelaMina", "CasadelTerror"],
         "JuegosPequeños" => ["MiniCarrusel", "Saltamontes", "Caballitos", "TrenInfantil","Mini Noria", "Rueditas","Coches de Choque"]
         ];
-
+ */
     /*function __construct($dias){
         $this->dias = $dias;
     }*/
@@ -99,6 +78,7 @@ class JuegosGrandes {
     public $duracion = 5;
     public $capacidadmin = 20;
     public $capacidadmax = 30;
+public $precio = 20;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
@@ -109,6 +89,7 @@ class JuegosMedianos {
     public $duracion = 7;
     public $capacidadmin = 10;
     public $capacidadmax = 20;
+public $precio = 15;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
@@ -119,12 +100,39 @@ class JuegosPequeños {
     public $duracion = 10;
     public $capacidadmin = 5;
     public $capacidadmax = 10;
+    public $precio = 10;
     function __construct($nombres){
         array_push($this->nombre,$nombres);
     }
 }
 class persona{
-    public $platita = random_int(30,200);
-}
+    public $platita;
 
+    function __construc(){
+        $this->platita = random_int(30,200);
+    }
+}
+//instanciacion de nuestro Parque
+$Marcelocolarota = new Parque_Diversiones;
+$fechaInicio = new DateTime('2024-06-01 15:00:00');
+//Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
+$fechaFinal = clone $fechaInicio;
+$fechaFinal->modify('+1 month');
+$Apertura = 15;
+$Cierre = 2;
+
+//Simulamos el tiempo minuto a minuto
+while ($fechaInicio < $fechaFinal) {
+    $horaActual = (int) $fechaInicio->format('H'); //(int) operador de casting 
+    //condicion para ver si estamos dentro de la franja horaria o sea cuando nuestro parque esta abierto
+if ($horaActual >= $Apertura || $horaActual < $Cierre) {
+        /* echo 'Hora actual: ' . $fechaInicio->format('Y-m-d H:i:s') . PHP_EOL; */
+
+
+    }
+    // Incrementa 1 minuto
+    $fechaInicio->modify('+1 minute');
+
+}
+echo 'Simulación finalizada.';
 ?>
