@@ -20,6 +20,7 @@ Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juego.
 
 
 class Parque_Diversiones{
+    public $caja;
     public $juegosGrandes = [];
     public $juegosMedianos = [];
     public $juegosChicos = [];
@@ -113,6 +114,10 @@ class persona{
     function __construct(){
         $this->platita = random_int(30,200);
     }
+}
+
+class empleados{
+
 }
 //instanciacion de nuestro Parque
 $LinkinPark = new Parque_Diversiones;
