@@ -26,12 +26,8 @@ class Parque_Diversiones{
     public $personas = [];
     public $empleados = 25;
     public $sueldos = 700;
-    /* CONST NOMBRESJUEGOS = [
-        "JuegosGrandes" => ["MontañaRusa", "RuedaDeLaFortuna", "EVOLUTION"],
-        "JuegosMedianos" => ["Carrusel", "SillasVoladoras", "TazasLocas", "BarcoPirata", "TrendelaMina", "CasadelTerror"],
-        "JuegosPequeños" => ["MiniCarrusel", "Saltamontes", "Caballitos", "TrenInfantil","Mini Noria", "Rueditas","Coches de Choque"]
-        ];
- */
+    public $ingresodia;
+    public $caja;
 
     public function agreagar_juego_grande($nombre){
         $this->juegosGrandes []= new JuegosGrandes($nombre);
@@ -75,27 +71,24 @@ class Parque_Diversiones{
                 $juego->diasUso++;
             }
         }
+    }   
+
+    public function correrJuegosConPersona(){
+
+        foreach ($this->juegosGrandes as $JuegoG) {
+            for ($i=0; $i < count($this->personas); $i++) { 
+                # code...
+            }
+                if($this->personas[$i]->platita >= $JuegoG->precio){
+                    $this->ingresodia += $JuegoG->precio;
+
+                }
+            
+        }
     }
-
-    //limites de persona
-    public function limitesdeusuarios(){
-
-    }
-
-    // para la cola o espera
-    public function espera(){
-
-    }
-
-    
-   
-    //para terminar el juego
-    public function terminarjuego(){
-
-    }
-
+        
     public function agregarpersonas(){
-        $this->personas []= new persona();
+        $this->personas []= new Persona();
     }
 }
 
@@ -114,7 +107,8 @@ class JuegosGrandes {
         array_push($this->nombre,$nombres);
     }
 
-    }
+}
+   
 class JuegosMedianos {
     public $nombre;
     public $duracion = 7;
@@ -142,7 +136,7 @@ class JuegosPequeños {
         array_push($this->nombre,$nombres);
     }
 }
-class persona{
+class Persona{
     public $platita;
 
     function __construct(){
@@ -192,7 +186,7 @@ if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
      $LinkinPark->mantenimiento($diasUso);
  
      // Incrementar el día de uso cada 24 horas
-     if ($fechaInicio->format('H:i') == '00:00') {
+     if ($fechaInicio->format('H:i') == '02:00') {
          $diasUso++;
      }
  
