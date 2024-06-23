@@ -20,7 +20,6 @@ Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juego.
 
 
 class Parque_Diversiones{
-    public $caja;
     public $juegosGrandes = [];
     public $juegosMedianos = [];
     public $juegosChicos = [];
@@ -78,18 +77,30 @@ class Parque_Diversiones{
 
         foreach ($this->juegosGrandes as $JuegoG) {
             for ($i=0; $i < count($this->personas); $i++) { 
-                # code...
-            }
                 if($this->personas[$i]->platita >= $JuegoG->precio){
                     $this->ingresodia += $JuegoG->precio;
 
                 }
-            
+            }
         }
+    }
+
+    public function findia(){
+        $this->ingresodia = 0;
     }
         
     public function agregarpersonas(){
         $this->personas []= new Persona();
+    }
+
+    public function cola($persona, $preferencia, &$colachica, &$colamediana, &$colagrande) {
+        if ($preferencia <= 5) {
+            $colagrande[] = $persona;
+        } elseif ($preferencia > 5 && $preferencia <= 8) {
+            $colamediana[] = $persona;
+        } else {
+            $colachica[] = $persona;
+        }
     }
 }
 
@@ -105,7 +116,7 @@ class JuegosGrandes {
     public $diaFinMantenimiento;
     public $precio = 20;
     function __construct($nombres){
-        array_push($this->nombre,$nombres);
+        $this->nombre = $nombres;
     }
 
 }
@@ -120,7 +131,7 @@ class JuegosMedianos {
     public $enMantenimiento = false;
     public $diaFinMantenimiento;
     function __construct($nombres){
-        array_push($this->nombre,$nombres);
+        $this->nombre = $nombres;
     }
 }
 
@@ -134,12 +145,12 @@ class JuegosPequeños {
     public $enMantenimiento = false;
     public $diaFinMantenimiento;
     function __construct($nombres){
-        array_push($this->nombre,$nombres);
+        $this->nombre = $nombres;
     }
 }
 class Persona{
     public $platita;
-
+    public $disponible = true;
     function __construct(){
         $this->platita = random_int(30,200);
     }
@@ -156,67 +167,85 @@ $fechaFinal = clone $fechaInicio;
 $fechaFinal->modify('+1 day');
 $Apertura = 15;
 $Cierre = 2;
-$dado;$minutosacum=0;
+$dado;
+$colachica = [];
+$colamediana = [];
+$colagrande = [];
 //Simulamos el tiempo minuto a minuto
 while ($fechaInicio < $fechaFinal) {
+
     $horaActual = (int) $fechaInicio->format('H'); //(int) operador de casting 
+    $minutos =  (int) $fechaInicio->format('i');
+
+
     //condicion para ver si estamos dentro de la franja horaria o sea cuando nuestro parque esta abierto
-if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
+    if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
 
         //Simulamos la llegada de personas en la primera tanda de 0 a 5 cada 10 min
-        if ($horaActual >= 15 && $horaActual <= 20 && $minutosacum == 10) {
+        if ($horaActual >= 15 && $horaActual <= 20 && $minutos % 10 == 0) {
             $dado = random_int(0, 5);
             for ($i=0; $i < $dado; $i++) { 
                 $LinkinPark->agregarpersonas();
             }
-            $minutosacum = 0;
-        }elseif($horaActual > 20 && $horaActual <= 23 && $minutosacum == 10){
+        }elseif($horaActual > 20 && $horaActual <= 23 && $minutos % 10 == 0){
             $dado = random_int(3, 8);
-            for ($i=0; $i < $dado; $i++) { 
+            for ($i=0; $i < $dado; $i++) {
                 $LinkinPark->agregarpersonas();
             }
-            $minutosacum = 0;
-        }elseif($horaActual > 23 && $minutosacum == 10){
+        }elseif($horaActual > 23 && $minutos % 10 == 0){
             $dado = random_int(1, 4);
             for ($i=0; $i < $dado; $i++) { 
                 $LinkinPark->agregarpersonas();
             }
-            $minutosacum = 0;
         }
-        $minutosacum++;
 
     }
+
+        for ($i=0; $i < count($LinkinPark->personas); $i++) { 
+            if ($LinkinPark->personas[$i]->disponible) {
+                $preferencia = random_int(1,10);
+                if($preferencia <= 5){
+                    $LinkinPark->personas[$i]->disponible = false;
+                }
+                if($preferencia > 5 && $preferencia <=8){
+                    $LinkinPark->personas[$i]->disponible = false;
+                }
+                if($preferencia > 8){
+                    $LinkinPark->personas[$i]->disponible = false;
+                }
+                $LinkinPark->cola($LinkinPark->personas[$i],$preferencia,$colachica,$colamediana,$colagrande);
+            }
+            
+        }
      // Correr los juegos y verificar mantenimiento
-     $LinkinPark->correrJuego();
-     $LinkinPark->mantenimiento($diasUso);
+    /*  $LinkinPark->correrJuego();
+     $LinkinPark->mantenimiento($diasUso); */
  
      // Incrementar el día de uso cada 24 horas
-     if ($fechaInicio->format('H:i') == '02:00') {
+     /* if ($fechaInicio->format('H:i') == '02:00') {
          $diasUso++;
-     }
+     } */
  
 
     // Incrementa 1 minuto
     $fechaInicio->modify('+1 minute');
 
 }
-$LinkinPark->agreagar_juego_grande("MontañaRusa");
-$LinkinPark->agreagar_juego_grande("RuedaDeLaFortuna");
+$LinkinPark->agreagar_juego_grande("Montania Rusa");
+$LinkinPark->agreagar_juego_grande("Rueda De La Fortuna");
 $LinkinPark->agreagar_juego_grande("EVOLUTION");
 $LinkinPark->agreagar_juego_mediano("Carrusel");
-$LinkinPark->agreagar_juego_mediano("SillasVoladoras");
-$LinkinPark->agreagar_juego_mediano("TazasLocas");
-$LinkinPark->agreagar_juego_mediano("BarcoPirata");
-$LinkinPark->agreagar_juego_mediano("TrendelaMina");
-$LinkinPark->agreagar_juego_pequeños("MiniCarrusel");
+$LinkinPark->agreagar_juego_mediano("Sillas Voladoras");
+$LinkinPark->agreagar_juego_mediano("Tazas Locas");
+$LinkinPark->agreagar_juego_mediano("Barco Pirata");
+$LinkinPark->agreagar_juego_mediano("Tren de la Mina");
+$LinkinPark->agreagar_juego_pequeños("Mini-Carrusel");
 $LinkinPark->agreagar_juego_pequeños("Saltamontes");
 $LinkinPark->agreagar_juego_pequeños("Caballitos");
-$LinkinPark->agreagar_juego_pequeños("TrenInfantil");
+$LinkinPark->agreagar_juego_pequeños("Tren Infantil");
 $LinkinPark->agreagar_juego_pequeños("MiniNoria");
 $LinkinPark->agreagar_juego_pequeños("Rueditas");
-$LinkinPark->agreagar_juego_pequeños("CochesdeChoque");
-
-
+$LinkinPark->agreagar_juego_pequeños("Autitos Chocadores");
 
  var_dump($LinkinPark->personas);
 ?>
