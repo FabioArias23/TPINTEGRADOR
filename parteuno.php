@@ -233,9 +233,6 @@ $fechaFinal->modify('+1 day');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
-$colachica = [];
-$colamediana = [];
-$colagrande = [];
 //Simulamos el tiempo minuto a minuto
 while ($fechaInicio < $fechaFinal) {
 
