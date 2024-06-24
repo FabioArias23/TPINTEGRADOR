@@ -173,6 +173,7 @@ class JuegosGrandes {
     public $diasUso = 0;
     public $enMantenimiento = false;
     public $diaFinMantenimiento;
+    public $enuso;
     public $precio = 20;
     function __construct($nombres){
         $this->nombre = $nombres;
@@ -260,24 +261,23 @@ while ($fechaInicio < $fechaFinal) {
         }
 
     }
-
+        $LinkinPark->cola();
 
 
       // Correr los juegos y verificar mantenimiento
-      if(count($colagrande)> 19 && count($colagrande) < 31){
+      if(count($LinkinPark->colaGrande)> 19 && count($LinkinPark->colaGrande) < 31){
         $LinkinPark->correrJuegos('grandes');
       }
-      if(count($colagrande) > 9 && count($colagrande) < 21){
+      if(count($LinkinPark->colaMediano) > 9 && count($LinkinPark->colaMediano) < 21){
        $LinkinPark->correrJuegos('chicos');
       }
-      if(count($colagrande)> 4 && count($colagrande) < 11){
+      if(count($LinkinPark->colaChico)> 4 && count($LinkinPark->colaChico) < 11){
         $LinkinPark->correrJuegos('medianos');
       }
       
       $LinkinPark->mantenimiento($fechaInicio->format('d'));
 
-      $LinkinPark->agregarPersonas();
-      $LinkinPark->cola();
+      
 
   
  
