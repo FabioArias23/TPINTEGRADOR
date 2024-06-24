@@ -27,6 +27,9 @@ class Parque_Diversiones{
     public $empleados = [];
     public $ingresodia;
     public $caja;
+    public $colachica = [];
+    public $colamediana = [];
+    public $colagrande= [];
 
     public function agreagar_juego_grande($nombre){
         $this->juegosGrandes []= new JuegosGrandes($nombre);
@@ -82,12 +85,15 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
         switch ($tipo) {
             case 'grandes':
                 $juegos = $this->juegosGrandes;
+                $cola = &$this->colaGrande;
                 break;
             case 'medianos':
                 $juegos = $this->juegosMedianos;
+                $cola = &$this->colaMediano;
                 break;
             case 'chicos':
                 $juegos = $this->juegosChicos;
+                $cola = &$this->colaChico;
                 break;
         }
         foreach ($juegos as $juego) {
@@ -101,7 +107,13 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
                         $persona->juegosUsados++;
                         if ($persona->juegosUsados >= 5 || $persona->platita < min($this->juegosGrandes[0]->precio, $this->juegosMedianos[0]->precio, $this->juegosChicos[0]->precio)) {
                             $persona->disponible = false;
+                        }else{
+                            //si la persona tiene platita y no ha subido a 5 juegos,
+                            $cola[] = $persona;
                         }
+                    }else {
+                        //si la persona no tiene mas platita, puede intentar con otro jueguito
+                        $persona->disponible = false;
                     }
                 }
             }
@@ -271,13 +283,15 @@ while ($fechaInicio < $fechaFinal) {
             }
             
         }
+        $LinkinPark->agregarPersonas();
+        $LinkinPark->cola();
 
       // Correr los juegos y verificar mantenimiento
       $LinkinPark->correrJuegos('grandes');
       $LinkinPark->correrJuegos('medianos');
       $LinkinPark->correrJuegos('chicos');
       $LinkinPark->mantenimiento($fechaInicio->format('d'));
-      
+
      // Correr los juegos y verificar mantenimiento
     /*  $LinkinPark->correrJuego();
      $LinkinPark->mantenimiento($diasUso); */
