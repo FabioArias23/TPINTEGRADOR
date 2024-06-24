@@ -143,13 +143,13 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
         if ($persona->disponible) {
             $preferencia = random_int(1,10);
         if($preferencia <= 5){
-            $this->colagrande [] = $persona;
+            $this->colaGrande [] = $persona;
         }
         if($preferencia > 5 && $preferencia <=8){
-            $this->colamediana [] = $persona;
+            $this->colaMediano [] = $persona;
         }
         if($preferencia > 8){
-            $this->colachica [] = $persona;
+            $this->colaChico [] = $persona;
         }
        }
     }
@@ -316,6 +316,10 @@ while ($fechaInicio < $fechaFinal) {
       
       $LinkinPark->mantenimiento($fechaInicio->format('d'));
 
+      $LinkinPark->agregarPersonas();
+      $LinkinPark->cola();
+
+  
      // Correr los juegos y verificar mantenimiento
     /*  $LinkinPark->correrJuego();
      $LinkinPark->mantenimiento($diasUso); */
