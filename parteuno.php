@@ -261,22 +261,7 @@ while ($fechaInicio < $fechaFinal) {
 
     }
 
-        for ($i=0; $i < count($LinkinPark->personas); $i++) { 
-            if ($LinkinPark->personas[$i]->disponible) {
-                $preferencia = random_int(1,10);
-                if($preferencia <= 5){
-                    $LinkinPark->personas[$i]->disponible = false;
-                }
-                if($preferencia > 5 && $preferencia <=8){
-                    $LinkinPark->personas[$i]->disponible = false;
-                }
-                if($preferencia > 8){
-                    $LinkinPark->personas[$i]->disponible = false;
-                }
-                $LinkinPark->cola($LinkinPark->personas[$i],$preferencia,$colachica,$colamediana,$colagrande);
-            }
-            
-        }
+
 
       // Correr los juegos y verificar mantenimiento
       if(count($colagrande)> 19 && count($colagrande) < 31){
