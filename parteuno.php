@@ -62,7 +62,20 @@ class Parque_Diversiones{
             }
         }
     }
+/*
 
+El método correrJuegos($tipo) realiza las siguientes acciones:
+
+Selecciona el tipo de juego a ejecutar basado en el argumento $tipo.
+Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
+Asigna a las personas al juego hasta la capacidad máxima del juego.
+Verifica si las personas tienen suficiente dinero para pagar el juego y
+ actualiza sus estados (platita y juegosUsados).
+Actualiza los ingresos del parque (ingresodia) y los días de uso del juego (diasUso).
+Marca a las personas como no disponibles si han usado al menos 5 juegos o si no tienen
+ suficiente dinero para pagar el juego más barato disponible.
+
+*/ 
   //correr juego con tu cola
     public function correrJuegos($tipo) {
         $juegos = [];
@@ -258,6 +271,13 @@ while ($fechaInicio < $fechaFinal) {
             }
             
         }
+
+      // Correr los juegos y verificar mantenimiento
+      $LinkinPark->correrJuegos('grandes');
+      $LinkinPark->correrJuegos('medianos');
+      $LinkinPark->correrJuegos('chicos');
+      $LinkinPark->mantenimiento($fechaInicio->format('d'));
+      
      // Correr los juegos y verificar mantenimiento
     /*  $LinkinPark->correrJuego();
      $LinkinPark->mantenimiento($diasUso); */
