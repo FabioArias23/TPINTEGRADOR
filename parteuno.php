@@ -63,7 +63,38 @@ class Parque_Diversiones{
         }
     }
 
-  
+  //correr juego con tu cola
+    public function correrJuegos($tipo) {
+        $juegos = [];
+        switch ($tipo) {
+            case 'grandes':
+                $juegos = $this->juegosGrandes;
+                break;
+            case 'medianos':
+                $juegos = $this->juegosMedianos;
+                break;
+            case 'chicos':
+                $juegos = $this->juegosChicos;
+                break;
+        }
+        foreach ($juegos as $juego) {
+            if (!$juego->enMantenimiento) {
+                $personasEnJuego = array_splice($this->personas, 0, $juego->capacidadmax);
+                foreach ($personasEnJuego as $persona) {
+                    if ($persona->platita >= $juego->precio) {
+                        $persona->platita -= $juego->precio;
+                        $this->ingresodia += $juego->precio;
+                        $juego->diasUso++;
+                        $persona->juegosUsados++;
+                        if ($persona->juegosUsados >= 5 || $persona->platita < min($this->juegosGrandes[0]->precio, $this->juegosMedianos[0]->precio, $this->juegosChicos[0]->precio)) {
+                            $persona->disponible = false;
+                        }
+                    }
+                }
+            }
+        }
+    
+    }
 
     public function correrJuegosGrandes(){
 
@@ -77,9 +108,6 @@ class Parque_Diversiones{
         }
     }
 
-    public function finDia(){
-        $this->ingresodia = 0;
-    }
         
     public function agregarPersonas(){
         $this->personas []= new Persona();
@@ -102,6 +130,16 @@ class Parque_Diversiones{
        
     }
 
+      // metodo para pagar tu cola con sueldos
+      public function pagarSueldos() {
+        $totalSueldos = count($this->empleados) * 700;
+        $this->caja -= $totalSueldos;
+    }
+    //metodo para darte el fin del dia por la cola
+    public function finDia() {
+        $this->caja += $this->ingresodia;
+        $this->ingresodia = 0;
+    }
 }
 
 
@@ -151,6 +189,7 @@ class JuegosPequeños {
 class Persona{
     public $platita;
     public $disponible = true;
+    public $juegosUsados = 0;
     function __construct(){
         $this->platita = random_int(30,200);
     }
@@ -249,5 +288,6 @@ $LinkinPark->agreagar_juego_pequeños("MiniNoria");
 $LinkinPark->agreagar_juego_pequeños("Rueditas");
 $LinkinPark->agreagar_juego_pequeños("Autitos Chocadores");
 $LinkinPark->agregarEmpleado(25);
+$LinkinPark->mantenimiento($fechaInicio->format('d'));
  var_dump($LinkinPark->personas);
 ?>
