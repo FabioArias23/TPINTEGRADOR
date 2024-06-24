@@ -287,9 +287,16 @@ while ($fechaInicio < $fechaFinal) {
         $LinkinPark->cola();
 
       // Correr los juegos y verificar mantenimiento
-      $LinkinPark->correrJuegos('grandes');
-      $LinkinPark->correrJuegos('medianos');
-      $LinkinPark->correrJuegos('chicos');
+      if(count($colagrande)> 19 && count($colagrande) < 31){
+        $LinkinPark->correrJuegos('grandes');
+      }
+      if(count($colagrande) > 9 && count($colagrande) < 21){
+       $LinkinPark->correrJuegos('chicos');
+      }
+      if(count($colagrande)> 4 && count($colagrande) < 11){
+        $LinkinPark->correrJuegos('medianos');
+      }
+      
       $LinkinPark->mantenimiento($fechaInicio->format('d'));
 
      // Correr los juegos y verificar mantenimiento
