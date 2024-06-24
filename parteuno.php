@@ -285,6 +285,7 @@ while ($fechaInicio < $fechaFinal) {
         }
         $LinkinPark->agregarPersonas();
         $LinkinPark->cola();
+        asd
 
       // Correr los juegos y verificar mantenimiento
       if(count($colagrande)> 19 && count($colagrande) < 31){
