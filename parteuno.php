@@ -27,6 +27,9 @@ class Parque_Diversiones{
     public $empleados = [];
     public $ingresodia;
     public $caja;
+    public $colaGrande = [];
+    public $colaMediano= [];
+    public $colaChico = [];
 
     public function agreagar_juego_grande($nombre){
         $this->juegosGrandes []= new JuegosGrandes($nombre);
