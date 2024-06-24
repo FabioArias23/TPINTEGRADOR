@@ -121,17 +121,7 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
     
     }
 
-    public function correrJuegosGrandes(){
 
-        foreach ($this->juegosGrandes as $JuegoG) {
-            for ($i=0; $i < count($this->personas); $i++) { 
-                if($this->personas[$i]->platita >= $JuegoG->precio){
-                    $this->ingresodia += $JuegoG->precio;
-
-                }
-            }
-        }
-    }
 
         
     public function agregarPersonas(){
@@ -172,22 +162,7 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
         $this->ingresodia = 0;
     }
 }
-/* for ($i=0; $i < count($LinkinPark->personas); $i++) { 
-    if ($LinkinPark->personas[$i]->disponible) {
-        $preferencia = random_int(1,10);
-        if($preferencia <= 5){
-            $LinkinPark->personas[$i]->disponible = false;
-        }
-        if($preferencia > 5 && $preferencia <=8){
-            $LinkinPark->personas[$i]->disponible = false;
-        }
-        if($preferencia > 8){
-            $LinkinPark->personas[$i]->disponible = false;
-        }
-        $LinkinPark->cola($LinkinPark->personas[$i],$preferencia,$colachica,$colamediana,$colagrande);
-    }
-    
-} */
+
 
 
 class JuegosGrandes {
@@ -320,14 +295,6 @@ while ($fechaInicio < $fechaFinal) {
       $LinkinPark->cola();
 
   
-     // Correr los juegos y verificar mantenimiento
-    /*  $LinkinPark->correrJuego();
-     $LinkinPark->mantenimiento($diasUso); */
- 
-     // Incrementar el día de uso cada 24 horas
-     /* if ($fechaInicio->format('H:i') == '02:00') {
-         $diasUso++;
-     } */
  
 
     // Incrementa 1 minuto
