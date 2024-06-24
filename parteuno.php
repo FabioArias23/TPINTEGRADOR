@@ -24,8 +24,7 @@ class Parque_Diversiones{
     public $juegosMedianos = [];
     public $juegosChicos = [];
     public $personas = [];
-    public $empleados = 25;
-    public $sueldos = 700;
+    public $empleados = [];
     public $ingresodia;
     public $caja;
 
@@ -64,16 +63,9 @@ class Parque_Diversiones{
         }
     }
 
-    // funcion para correr juegos
-    public function correrJuego() {
-        foreach (array_merge($this->juegosGrandes, $this->juegosMedianos, $this->juegosChicos) as $juego) {
-            if (!$juego->enMantenimiento) {
-                $juego->diasUso++;
-            }
-        }
-    }   
+  
 
-    public function correrJuegosConPersona(){
+    public function correrJuegosGrandes(){
 
         foreach ($this->juegosGrandes as $JuegoG) {
             for ($i=0; $i < count($this->personas); $i++) { 
@@ -85,11 +77,11 @@ class Parque_Diversiones{
         }
     }
 
-    public function findia(){
+    public function finDia(){
         $this->ingresodia = 0;
     }
         
-    public function agregarpersonas(){
+    public function agregarPersonas(){
         $this->personas []= new Persona();
     }
 
@@ -102,6 +94,14 @@ class Parque_Diversiones{
             $colachica[] = $persona;
         }
     }
+
+    public function agregarEmpleado ($cantidad){
+        for($i = 0; $i<$cantidad; $i++){ 
+            $this->empleados [] =  new Empleado();
+        }
+       
+    }
+
 }
 
 
@@ -156,7 +156,8 @@ class Persona{
     }
 }
 
-class empleados{
+class Empleado{
+    public $sueldos = 700;
 
 }
 //instanciacion de nuestro Parque
@@ -177,6 +178,7 @@ while ($fechaInicio < $fechaFinal) {
     $horaActual = (int) $fechaInicio->format('H'); //(int) operador de casting 
     $minutos =  (int) $fechaInicio->format('i');
 
+    
 
     //condicion para ver si estamos dentro de la franja horaria o sea cuando nuestro parque esta abierto
     if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
@@ -246,6 +248,6 @@ $LinkinPark->agreagar_juego_pequeños("Tren Infantil");
 $LinkinPark->agreagar_juego_pequeños("MiniNoria");
 $LinkinPark->agreagar_juego_pequeños("Rueditas");
 $LinkinPark->agreagar_juego_pequeños("Autitos Chocadores");
-
+$LinkinPark->agregarEmpleado(25);
  var_dump($LinkinPark->personas);
 ?>
