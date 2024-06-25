@@ -1,6 +1,6 @@
 
 <?php
-$fechaInicio = new DateTime('2024-06-01 15:00:00');
+/* $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
 $fechaFinal->modify('+1 day');
@@ -13,5 +13,6 @@ $cont++;
 }
 $fechaInicio->modify('+1 minute');
 }
-echo "$cont";
+echo "$cont"; */
+
 ?>
