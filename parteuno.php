@@ -40,13 +40,15 @@ class Parque_Diversiones{
 
     //funcion para mantenimiento de juegos
     
-    public function mantenimiento($diaActual) {
-        $this->verificarMantenimiento($this->juegosGrandes, 5, 3, $diaActual);
-        $this->verificarMantenimiento($this->juegosMedianos, 5, 2, $diaActual);
-        $this->verificarMantenimiento($this->juegosChicos, 5, 1, $diaActual);
+    public function mantenimiento($diaActual,$indice,) {
+
+        
+        $this->verificarMantenimiento( $this->juegosGrandes[$indice]->diasdeuso, $this->juegosGrandes[$indice]->diasdemantenimiento, $diaActual);
+        $this->verificarMantenimiento($this->juegosMedianos, $this->juegosMedianos[$indice]->diasdeuso, $this->juegosMedianos[$indice]->diasdemantenimiento, $diaActual);
+        $this->verificarMantenimiento($this->juegosChicos, $this->juegosChicos[$indice]->diasdeuso, $this->juegosChicos[$indice]->diasdemantenimiento, $diaActual);
     }
 
-    private function verificarMantenimiento(&$juegos, $diasUso, $diasMantenimiento, $diaActual) {
+    private function verificarMantenimiento($diasUso, $diasMantenimiento, $diaActual) {
         foreach ($juegos as $juegos) {
             if ($juegos->enMantenimiento) {
                 if ($juegos->diaFinMantenimiento <= $diaActual) {
@@ -161,7 +163,12 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
         $this->caja += $this->ingresodia;
         $this->ingresodia = 0;
         $this->personas = [];
-
+        $todoslosjuegos = array(array_merge($this->juegosGrandes,$this->juegosMedianos,$this->juegosChicos));
+        for ($i = 0; $i < count($todoslosjuegos); $i++) {
+            if($todoslosjuegos[$i]->seuso ){
+              $todoslosjuegos[$i]->diasdeuso++;
+            }
+        }
        
     }
 }
@@ -172,12 +179,13 @@ class JuegosGrandes {
     public $cola = [];
     public $nombre;
     public $duracion = 5;
+    public $diasdemantenimiento = 3;
     public $capacidadmin = 20;
     public $capacidadmax = 30;
     public $diasUso = 0;
     public $enMantenimiento = false;
     public $diaFinMantenimiento;
-    public $enuso;
+    public $seuso = false;
     public $precio = 20;
     function __construct($nombres){
         $this->nombre = $nombres;
@@ -188,11 +196,13 @@ class JuegosGrandes {
 class JuegosMedianos {
     public $cola = [];
     public $nombre;
+    public $diasdemantenimiento = 2;
     public $duracion = 7;
     public $capacidadmin = 10;
     public $capacidadmax = 20;
     public $precio = 15;
     public $diasUso = 0;
+    public $seuso = false;
     public $enMantenimiento = false;
     public $diaFinMantenimiento;
     function __construct($nombres){
@@ -203,11 +213,13 @@ class JuegosMedianos {
 class JuegosPequeños {
     public $cola = [];
     public $nombre;
+    public $diasdemantenimiento = 1;
     public $duracion = 10;
     public $capacidadmin = 5;
     public $capacidadmax = 10;
     public $precio = 10;
     public $diasUso = 0;
+    public $seuso = false;
     public $enMantenimiento = false;
     public $diaFinMantenimiento;
     function __construct($nombres){
