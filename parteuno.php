@@ -287,7 +287,7 @@ while ($fechaInicio < $fechaFinal) {
         $LinkinPark->cola();
         }
 
-      // Correr los juegos y verificar mantenimiento
+      // Correr los juegos
       for ($i=0; $i < 3; $i++) { 
          if(count($LinkinPark->juegosGrandes[$i]->cola)> 19 && count($LinkinPark->juegosGrandes[$i]->cola) < 31){
         $LinkinPark->correrJuegos('grandes',$i);
