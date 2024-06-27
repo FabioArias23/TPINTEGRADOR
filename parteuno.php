@@ -4,15 +4,15 @@
 •	Cuenta con 15 juegos, 3 grandes, 5 medianos y 7 pequeños 
 •	Todos los juegos deben funcionar el fin de semana, el mantenimiento se realiza después de 5 días de uso, y en 
     los juegos grandes dura 3 días, en los medianos 2 y los pequeños 1.
-•	Cada juego tiene un límite de usuarios por ejecución, los grandes tienen un límite de entre 20 y 30, los medianos entre 10 y 20 y los pequeños entre 5 y 10.
+•	Cada juegos tiene un límite de usuarios por ejecución, los grandes tienen un límite de entre 20 y 30, los medianos entre 10 y 20 y los pequeños entre 5 y 10.
 •	El uso de los juegos dura 5 minutos para los grandes, 7 para los medianos y 10 para los pequeños, al ingresar y 
-salir del juego se demoran entre 1 y 3 minutos por cada 5 personas.
+salir del juegos se demoran entre 1 y 3 minutos por cada 5 personas.
 •	Las personas tienen una preferencia del 50% por los juegos grandes, 30% por los medianos y 20% por los pequeños.
-Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juego.
+Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juegos.
 •	Cada persona tiene un presupuesto entre $30 y $200.
 •	El precio de los juegos grandes es de $20, de los medianos de $15 y los pequeños $10.
 •	Una vez que se termina su dinero se retira o después de subir a al menos 5 juegos.
-•	Puede subirse al mismo juego varias veces.
+•	Puede subirse al mismo juegos varias veces.
 •	Las personas llegan en grupos de entre 0 y 5 entre las 15 y las 20 cada 10 minutos, de 3 a 8 entre las 20 y las 23 y de entre 1 a 4 entre las 23 y las 2
 •	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700.
 */ 
@@ -47,16 +47,16 @@ class Parque_Diversiones{
     }
 
     private function verificarMantenimiento(&$juegos, $diasUso, $diasMantenimiento, $diaActual) {
-        foreach ($juegos as $juego) {
-            if ($juego->enMantenimiento) {
-                if ($juego->diaFinMantenimiento <= $diaActual) {
-                    $juego->enMantenimiento = false;
+        foreach ($juegos as $juegos) {
+            if ($juegos->enMantenimiento) {
+                if ($juegos->diaFinMantenimiento <= $diaActual) {
+                    $juegos->enMantenimiento = false;
                 }
             } else {
-                if ($juego->diasUso >= $diasUso) {
-                    $juego->enMantenimiento = true;
-                    $juego->diaFinMantenimiento = $diaActual + $diasMantenimiento;
-                    $juego->diasUso = 0;
+                if ($juegos->diasUso >= $diasUso) {
+                    $juegos->enMantenimiento = true;
+                    $juegos->diaFinMantenimiento = $diaActual + $diasMantenimiento;
+                    $juegos->diasUso = 0;
                 }
             }
         }
@@ -65,17 +65,17 @@ class Parque_Diversiones{
 
 El método correrJuegos($tipo) realiza las siguientes acciones:
 
-Selecciona el tipo de juego a ejecutar basado en el argumento $tipo.
+Selecciona el tipo de juegos a ejecutar basado en el argumento $tipo.
 Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
-Asigna a las personas al juego hasta la capacidad máxima del juego.
-Verifica si las personas tienen suficiente dinero para pagar el juego y
+Asigna a las personas al juegos hasta la capacidad máxima del juegos.
+Verifica si las personas tienen suficiente dinero para pagar el juegos y
  actualiza sus estados (platita y juegosUsados).
-Actualiza los ingresos del parque (ingresodia) y los días de uso del juego (diasUso).
+Actualiza los ingresos del parque (ingresodia) y los días de uso del juegos (diasUso).
 Marca a las personas como no disponibles si han usado al menos 5 juegos o si no tienen
- suficiente dinero para pagar el juego más barato disponible.
+ suficiente dinero para pagar el juegos más barato disponible.
 
 */ 
-  //correr juego con tu cola
+  //correr juegos con tu cola
     public function correrJuegos($tipo,$indice) {
         switch ($tipo) {
             case 'grandes':
