@@ -15,4 +15,17 @@ $fechaInicio->modify('+1 minute');
 }
 echo "$cont"; */
 
+abstract class clase2 {
+
+    abstract public function despedirse();
+}
+
+class clase3 extends clase2 {
+    public function despedirse() {
+        parent::despedirse();
+        echo 'adios';
+    }
+}
+
+(new clase3)->despedirse();
 ?>

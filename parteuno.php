@@ -92,14 +92,13 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
                 $cola = &$this->juegosChicos[$indice]->cola;
                 break;
         }
-        foreach ($juegos as $juego) {
-            if (!$juego->enMantenimiento) {
-                $personasEnJuego = array_splice($this->personas, 0, $juego->capacidadmax);
+            if (!$juegos->enMantenimiento) {
+                $personasEnJuego = array_splice($this->personas, 0, $juegos->capacidadmax);
                 foreach ($personasEnJuego as $persona) {
-                    if ($persona->platita >= $juego->precio) {
-                        $persona->platita -= $juego->precio;
-                        $this->ingresodia += $juego->precio;
-                        $juego->diasUso++;
+                    if ($persona->platita >= $juegos->precio) {
+                        $persona->platita -= $juegos->precio;
+                        $this->ingresodia += $juegos->precio;
+                        $juegos->diasUso++;
                         $persona->juegosUsados++;
                         if ($persona->juegosUsados >= 5 || $persona->platita < min($this->juegosGrandes[0]->precio, $this->juegosMedianos[0]->precio, $this->juegosChicos[0]->precio)) {
                             $persona->disponible = false;
@@ -113,7 +112,7 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
                     }
                 }
             }
-        }
+        
     
     }
 
@@ -287,7 +286,7 @@ while ($fechaInicio < $fechaFinal) {
         $LinkinPark->cola();
         }
 
-      // Correr los juegos y verificar mantenimiento
+      // Correr los juegos
       for ($i=0; $i < 3; $i++) { 
          if(count($LinkinPark->juegosGrandes[$i]->cola)> 19 && count($LinkinPark->juegosGrandes[$i]->cola) < 31){
         $LinkinPark->correrJuegos('grandes',$i);
