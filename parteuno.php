@@ -77,28 +77,25 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
 */ 
   //correr juego con tu cola
     public function correrJuegos($tipo,$indice) {
-        $juegos = [];
         switch ($tipo) {
             case 'grandes':
-                $juegos = $this->juegosGrandes[$indice];
+                $juego = $this->juegosGrandes[$indice];
                 $cola = &$this->juegosGrandes[$indice]->cola;
                 break;
             case 'medianos':
-                $juegos = $this->juegosMedianos[$indice];
+                $juego = $this->juegosMedianos[$indice];
                 $cola = &$this->juegosMedianos[$indice]->cola;
                 break;
             case 'chicos':
-                $juegos = $this->juegosChicos[$indice];
+                $juego = $this->juegosChicos[$indice];
                 $cola = &$this->juegosChicos[$indice]->cola;
                 break;
         }
-            if (!$juegos->enMantenimiento) {
-                $personasEnJuego = array_splice($this->personas, 0, $juegos->capacidadmax);
-                foreach ($personasEnJuego as $persona) {
-                    if ($persona->platita >= $juegos->precio) {
-                        $persona->platita -= $juegos->precio;
-                        $this->ingresodia += $juegos->precio;
-                        $juegos->diasUso++;
+            if (!$juego->enMantenimiento) {
+                foreach ($cola as &$persona) {
+                    if ($persona->platita >= $juego->precio) {
+                        $persona->platita -= $juego->precio;
+                        $this->ingresodia += $juego->precio;
                         $persona->juegosUsados++;
                         if ($persona->juegosUsados >= 5 || $persona->platita < min($this->juegosGrandes[0]->precio, $this->juegosMedianos[0]->precio, $this->juegosChicos[0]->precio)) {
                             $persona->disponible = false;
@@ -115,29 +112,34 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
         
     
     }
-
-
-
-        
     public function agregarPersonas(){
         $this->personas []= new Persona();
     }
-
-    public function cola() {
-       foreach ($this->personas as $persona) {
-        if ($persona->disponible) {
+    public function asignar_personas_cola() {
+//recorremos el arreglo de personas y verificamos si se encuentra disponible y si tiene suficiente dinero para entrar a algun juego
+       for ($i=0; $i < count($this->personas); $i++) { 
+        if ($this->personas[$i]->disponible) {
             $preferencia = random_int(1,10);
         if($preferencia <= 5){
-            $indicejuego = random_int(0,2);
-            $this->juegosGrandes[$indicejuego]->cola []= $persona;
+            $indicejuego = random_int(0,2); 
+            while ($this->juegosGrandes[$indicejuego]->enMantenimiento) {
+                $indicejuego = random_int(0,2);
+            }
+            $this->juegosGrandes[$indicejuego]->cola []= &$this->personas[$i];
         }
         if($preferencia > 5 && $preferencia <=8){
             $indicejuego = random_int(0,4);
-            $this->juegosMedianos[$indicejuego]->cola []= $persona;
+            while ($this->juegosMedianos[$indicejuego]->enMantenimiento) {
+                $indicejuego = random_int(0,4);
+            }
+            $this->juegosMedianos[$indicejuego]->cola []= &$this->personas[$i];
         }
         if($preferencia > 8){
             $indicejuego = random_int(0,6);
-            $this->juegosChicos[$indicejuego]->cola []= $persona;
+            while ($this->juegosChicos[$indicejuego]->enMantenimiento) {
+                $indicejuego = random_int(0,6);
+            }
+            $this->juegosChicos[$indicejuego]->cola []= &$this->personas[$i];
         }
        }
     }
@@ -159,6 +161,8 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
         $this->caja += $this->ingresodia;
         $this->ingresodia = 0;
         $this->personas = [];
+
+       
     }
 }
 
@@ -279,11 +283,11 @@ while ($fechaInicio < $fechaFinal) {
     } 
     //finalizar dia dejando los ingresos del dia en 0 y el arreglo de personas en 0
      if($fechaInicio->format('H:i') == '02:00'){ 
-        $array []= $LinkinPark->personas;
+        /* $array []= $LinkinPark->personas; */
          $LinkinPark->finDia();
         } 
         if(!empty($LinkinPark->personas)){
-        $LinkinPark->cola();
+        $LinkinPark->asignar_personas_cola();
         }
 
       // Correr los juegos
