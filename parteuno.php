@@ -3,7 +3,7 @@
 •	Abre todos los días de 15 a 2.
 •	Cuenta con 15 juegos, 3 grandes, 5 medianos y 7 pequeños 
 •	Todos los juegos deben funcionar el fin de semana, el mantenimiento se realiza después de 5 días de uso, y en 
-    los juegos grandes dura 3 días, en los medianos 2 y los pequeños 1.
+•	los juegos grandes dura 3 días, en los medianos 2 y los pequeños 1.
 •	Cada juegos tiene un límite de usuarios por ejecución, los grandes tienen un límite de entre 20 y 30, los medianos entre 10 y 20 y los pequeños entre 5 y 10.
 •	El uso de los juegos dura 5 minutos para los grandes, 7 para los medianos y 10 para los pequeños, al ingresar y 
 salir del juegos se demoran entre 1 y 3 minutos por cada 5 personas.
@@ -15,7 +15,7 @@ Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juegos.
 •	Puede subirse al mismo juegos varias veces.
 •	Las personas llegan en grupos de entre 0 y 5 entre las 15 y las 20 cada 10 minutos, de 3 a 8 entre las 20 y las 23 y de entre 1 a 4 entre las 23 y las 2
 •	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700.
-    Elaborar una lista de ingresos diarios. Realizar un balance semanal y uno mensual.
+•	Elaborar una lista de ingresos diarios. Realizar un balance semanal y uno mensual.
 */ 
 class Parque_Diversiones{
     public $juegosGrandes = []; //tengo 3
@@ -68,19 +68,37 @@ suficiente dinero para pagar el juegos más barato disponible.
     public function correrJuegos($tipo,$indice) {
         switch ($tipo) {
             case 'grandes':
-                $juego = $this->juegosGrandes[$indice];
-                $cola = &$this->juegosGrandes[$indice]->cola;
+                for ($i=0; $i < count($this->juegosGrandes[$indice]->cola); $i++) { 
+                    $this->juegosGrandes[$indice]->cola[$i]->platita -= $this->juegosGrandes[$indice]->precio;
+                    $this->ingresodia += $this->juegosGrandes[0]->precio;
+                    $this->juegosGrandes[$indice]->cola[$i]->juegosUsados++; 
+                    $this->juegosGrandes[$indice]->seuso = true;
+                    $this->juegosGrandes[$indice]->cola[$i]->disponible = true;
+                }
+                $this->juegosGrandes[$indice]->cola = [];
                 break;
             case 'medianos':
-                $juego = $this->juegosMedianos[$indice];
-                $cola = &$this->juegosMedianos[$indice]->cola;
+                for ($i=0; $i < count($this->juegosMedianos[$indice]->cola); $i++) { 
+                    $this->juegosMedianos[$indice]->cola[$i]->platita -= $this->juegosMedianos[$indice]->precio;
+                    $this->ingresodia += $this->juegosMedianos[0]->precio;
+                    $this->juegosMedianos[$indice]->cola[$i]->juegosUsados++;
+                    $this->juegosMedianos[$indice]->seuso = true;
+                    $this->juegosMedianos[$indice]->cola[$i]->disponible = true;
+                }
+                $this->juegosMedianos[$indice]->cola = [];
                 break;
             case 'chicos':
-                $juego = $this->juegosChicos[$indice];
-                $cola = &$this->juegosChicos[$indice]->cola;
+                for ($i=0; $i < count($this->juegosChicos[$indice]->cola); $i++) { 
+                    $this->juegosChicos[$indice]->cola[$i]->platita -= $this->juegosChicos[$indice]->precio;
+                    $this->ingresodia += $this->juegosChicos[0]->precio;
+                    $this->juegosChicos[$indice]->cola[$i]->juegosUsados++;
+                    $this->juegosChicos[$indice]->seuso = true;
+                    $this->juegosChicos[$indice]->cola[$i]->disponible = true;
+                }
+                $this->juegosChicos[$indice]->cola = [];
                 break;
         }
-            if (!$juego->enMantenimiento) {
+/*             if (!$juego->enMantenimiento) {
                 foreach ($cola as &$persona) {
                     if ($persona->platita >= $juego->precio) {
                         $persona->platita -= $juego->precio;
@@ -97,7 +115,7 @@ suficiente dinero para pagar el juegos más barato disponible.
                         $persona->disponible = false;
                     }
                 }
-            }
+            } */
     }
     public function agregarPersonas(){
         $this->personas []= new Persona();
@@ -113,6 +131,7 @@ suficiente dinero para pagar el juegos más barato disponible.
                 $indicejuego = random_int(0,2);
             }
             $this->juegosGrandes[$indicejuego]->cola [] = &$this->personas[$i];
+            $this->personas[$i]->disponible = false;
         }
         if($preferencia > 5 && $preferencia <=8 && $this->personas[$i]->platita >= 15){
             $indicejuego = random_int(0,4);
@@ -120,6 +139,7 @@ suficiente dinero para pagar el juegos más barato disponible.
                 $indicejuego = random_int(0,4);
             }
             $this->juegosMedianos[$indicejuego]->cola []= &$this->personas[$i];
+            $this->personas[$i]->disponible = false;
         }
         if($preferencia > 8 && $this->personas[$i]->platita >= 10){
             $indicejuego = random_int(0,6);
@@ -127,6 +147,7 @@ suficiente dinero para pagar el juegos más barato disponible.
                 $indicejuego = random_int(0,6);
             }
             $this->juegosChicos[$indicejuego]->cola []= &$this->personas[$i];
+            $this->personas[$i]->disponible = false;
         }
     }
     }
@@ -149,10 +170,22 @@ suficiente dinero para pagar el juegos más barato disponible.
         $this->caja += $this->ingresodia;
         $this->ingresodia = 0;
         $this->personas = [];
-        $todoslosjuegos = array(array_merge($this->juegosGrandes,$this->juegosMedianos,$this->juegosChicos));
-        for ($i = 0; $i < count($todoslosjuegos); $i++) {
-            if($todoslosjuegos[$i]->seuso ){
-            $todoslosjuegos[$i]->diasdeuso++;
+        for ($i=0; $i < 3; $i++) { 
+            if ($this->juegosGrandes[$i]->seuso) {
+                $this->juegosGrandes[$i]->diasUso++;
+                $this->juegosGrandes[$i]->seuso = false;
+            }
+        }
+        for ($i=0; $i < 5; $i++) { 
+            if ($this->juegosMedianos[$i]->seuso) {
+                $this->juegosMedianos[$i]->diasUso++;
+                $this->juegosMedianos[$i]->seuso = false;
+            }
+        }
+        for ($i=0; $i < 7; $i++) { 
+            if ($this->juegosChicos[$i]->seuso) {
+                $this->juegosChicos[$i]->diasUso++;
+                $this->juegosChicos[$i]->seuso = false;
             }
         }
     }
@@ -237,7 +270,7 @@ $LinkinPark->agregarEmpleado(25);
 $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
-$fechaFinal->modify('+1 month');
+$fechaFinal->modify('+1 day');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
@@ -269,34 +302,37 @@ while ($fechaInicio < $fechaFinal) {
          // Correr los juegos
     for ($i=0; $i < 3; $i++) { 
         if(count($LinkinPark->juegosGrandes[$i]->cola) >= 20 && count($LinkinPark->juegosGrandes[$i]->cola) <= 30){
+    
     $LinkinPark->correrJuegos('grandes',$i);
-    $LinkinPark->mantenimiento($fechaInicio->format('d'),$i);
     }
     }
     for ($i=0; $i < 5; $i++) { 
-    if(count($LinkinPark->juegosMedianos[$i]->cola) > 9 && count($LinkinPark->juegosMedianos[$i]->cola) < 21){
+    if(count($LinkinPark->juegosMedianos[$i]->cola) >= 10 && count($LinkinPark->juegosMedianos[$i]->cola) <= 20){
     $LinkinPark->correrJuegos('medianos',$i);
-    $LinkinPark->mantenimiento($fechaInicio->format('d'),$i);
+    
     }
     }
     for ($i=0; $i < 7; $i++) { 
-    if(count($LinkinPark->juegosChicos[$i]->cola)> 4 && count($LinkinPark->juegosChicos[$i]->cola) < 11){
+    if(count($LinkinPark->juegosChicos[$i]->cola) >= 5 && count($LinkinPark->juegosChicos[$i]->cola) <= 10){
     $LinkinPark->correrJuegos('chicos',$i);
-    $LinkinPark->mantenimiento($fechaInicio->format('d'),$i);
     }
     }
     }
-    //finalizar dia dejando los ingresos del dia en 0 y el arreglo de personas en 0
+    if($fechaInicio->format('H:i') == '01:59'){ 
+        var_dump($LinkinPark->personas);
+        } 
+    //finalizar dia dejando los ingresos del dia en 0 y el arreglo de personas en 0 y verificando que juego se ejecuto asi sumarle un dia de uso
     if($fechaInicio->format('H:i') == '02:00'){ 
     $LinkinPark->finDia();
     } 
-     //verficamos si el arreglo de personas no esta vacio e invocamos el metodo asignar personas
+     //verficamos si el arreglo de personas no esta vacio e invocamos el metodo asignar personas donde se evalua si la persona esta disponible 
+     //y si la persona tiene suficiente platita para entrar al algun juego
     if(!empty($LinkinPark->personas)){
         $LinkinPark->asignar_personas_cola();
     }
     // Incrementa 1 minuto 
     $fechaInicio->modify('+1 minute');
 }
+var_dump($LinkinPark->caja);
 
-var_dump($LinkinPark->personas);
 ?>
