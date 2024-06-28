@@ -1,5 +1,5 @@
 <?php
-/*Una Feria
+/*Una Parque de Diversiones
 •	Abre todos los días de 15 a 2.
 •	Cuenta con 15 juegos, 3 grandes, 5 medianos y 7 pequeños 
 •	Todos los juegos deben funcionar el fin de semana, el mantenimiento se realiza después de 5 días de uso, y en 
@@ -15,10 +15,9 @@ Por lo que las colas se limitan a 3 veces la capacidad por cada tipo de juegos.
 •	Puede subirse al mismo juegos varias veces.
 •	Las personas llegan en grupos de entre 0 y 5 entre las 15 y las 20 cada 10 minutos, de 3 a 8 entre las 20 y las 23 y de entre 1 a 4 entre las 23 y las 2
 •	A fin de mes, pagar el sueldo a los 25 empleados, el sueldo de cada empleado es de $700.
+
+    Elaborar una lista de ingresos diarios. Realizar un balance semanal y uno mensual.
 */ 
-
-
-
 class Parque_Diversiones{
     public $juegosGrandes = []; //tengo 3
     public $juegosMedianos = []; // tengo 5
@@ -27,7 +26,6 @@ class Parque_Diversiones{
     public $empleados = [];
     public $ingresodia;
     public $caja;
-    
     public function agreagar_juego_grande($nombre){
         $this->juegosGrandes []= new JuegosGrandes($nombre);
     }
@@ -37,19 +35,13 @@ class Parque_Diversiones{
     public function agreagar_juego_pequeños($nombre){
         $this->juegosChicos []= new JuegosPequeños($nombre);
     }
-
     //funcion para mantenimiento de juegos
-    
     public function mantenimiento($diaActual,$indice,) {
-
-        
-        $this->verificarMantenimiento( $this->juegosGrandes[$indice]->diasdeuso, $this->juegosGrandes[$indice]->diasdemantenimiento, $diaActual);
-        $this->verificarMantenimiento($this->juegosMedianos, $this->juegosMedianos[$indice]->diasdeuso, $this->juegosMedianos[$indice]->diasdemantenimiento, $diaActual);
-        $this->verificarMantenimiento($this->juegosChicos, $this->juegosChicos[$indice]->diasdeuso, $this->juegosChicos[$indice]->diasdemantenimiento, $diaActual);
+        $this->verificarMantenimiento($this->juegosGrandes[$indice],$this->juegosGrandes[$indice]->diasdeuso, $this->juegosGrandes[$indice]->diasdemantenimiento, $diaActual);
+        $this->verificarMantenimiento($this->juegosMedianos[$indice],$this->juegosMedianos, $this->juegosMedianos[$indice]->diasdeuso, $this->juegosMedianos[$indice]->diasdemantenimiento, $diaActual);
+        $this->verificarMantenimiento($this->juegosChicos[$indice],$this->juegosChicos, $this->juegosChicos[$indice]->diasdeuso, $this->juegosChicos[$indice]->diasdemantenimiento, $diaActual);
     }
-
-    private function verificarMantenimiento($diasUso, $diasMantenimiento, $diaActual) {
-        foreach ($juegos as $juegos) {
+    private function verificarMantenimiento($juegos,$diasUso, $diasMantenimiento, $diaActual) {
             if ($juegos->enMantenimiento) {
                 if ($juegos->diaFinMantenimiento <= $diaActual) {
                     $juegos->enMantenimiento = false;
@@ -61,12 +53,9 @@ class Parque_Diversiones{
                     $juegos->diasUso = 0;
                 }
             }
-        }
     }
 /*
-
 El método correrJuegos($tipo) realiza las siguientes acciones:
-
 Selecciona el tipo de juegos a ejecutar basado en el argumento $tipo.
 Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
 Asigna a las personas al juegos hasta la capacidad máxima del juegos.
@@ -75,7 +64,6 @@ Verifica si las personas tienen suficiente dinero para pagar el juegos y
 Actualiza los ingresos del parque (ingresodia) y los días de uso del juegos (diasUso).
 Marca a las personas como no disponibles si han usado al menos 5 juegos o si no tienen
  suficiente dinero para pagar el juegos más barato disponible.
-
 */ 
   //correr juegos con tu cola
     public function correrJuegos($tipo,$indice) {
@@ -111,8 +99,6 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
                     }
                 }
             }
-        
-    
     }
     public function agregarPersonas(){
         $this->personas []= new Persona();
@@ -123,11 +109,11 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
         if ($this->personas[$i]->disponible) {
             $preferencia = random_int(1,10);
         if($preferencia <= 5){
-            $indicejuego = random_int(0,2); 
+            $indicejuego = random_int(0,2);
             while ($this->juegosGrandes[$indicejuego]->enMantenimiento) {
                 $indicejuego = random_int(0,2);
             }
-            $this->juegosGrandes[$indicejuego]->cola []= &$this->personas[$i];
+            $this->juegosGrandes[$indicejuego]->cola [] = &$this->personas[$i];
         }
         if($preferencia > 5 && $preferencia <=8){
             $indicejuego = random_int(0,4);
@@ -147,17 +133,18 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
     }
     }
     public function agregarEmpleado ($cantidad){
-        for($i = 0; $i<$cantidad; $i++){ 
+        for($i = 0; $i<$cantidad; $i++){
             $this->empleados [] =  new Empleado();
         }
-       
     }
-
       // metodo para pagar tu cola con sueldos
       public function pagarSueldos() {
         $totalSueldos = count($this->empleados) * 700;
         $this->caja -= $totalSueldos;
+        for($i = 0; $i < 25; $i++){
+            $this->empleados[$i]->sueldos [] = $this->empleados[$i]->sueldos; 
     }
+}
     //metodo para darte el fin del dia por la cola
     public function finDia() {
         $this->caja += $this->ingresodia;
@@ -169,12 +156,8 @@ Marca a las personas como no disponibles si han usado al menos 5 juegos o si no 
               $todoslosjuegos[$i]->diasdeuso++;
             }
         }
-       
     }
 }
-
-
-
 class JuegosGrandes {
     public $cola = [];
     public $nombre;
@@ -190,9 +173,7 @@ class JuegosGrandes {
     function __construct($nombres){
         $this->nombre = $nombres;
     }
-
 }
-   
 class JuegosMedianos {
     public $cola = [];
     public $nombre;
@@ -209,7 +190,6 @@ class JuegosMedianos {
         $this->nombre = $nombres;
     }
 }
-
 class JuegosPequeños {
     public $cola = [];
     public $nombre;
@@ -234,10 +214,9 @@ class Persona{
         $this->platita = random_int(30,200);
     }
 }
-
 class Empleado{
+    public $sueltos = [];
     public $sueldos = 700;
-
 }
 //instanciacion de nuestro Parque
 $LinkinPark = new Parque_Diversiones;
@@ -260,17 +239,15 @@ $LinkinPark->agregarEmpleado(25);
 $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
-$fechaFinal->modify('+1 day');
+$fechaFinal->modify('+1 year');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
 $array = [];
 //Simulamos el tiempo minuto a minuto
 while ($fechaInicio < $fechaFinal) {
-
-    $horaActual = (int) $fechaInicio->format('H'); //(int) operador de casting 
+    $horaActual = (int) $fechaInicio->format('H');//(int) operador de casting 
     $minutos =  (int) $fechaInicio->format('i');
-
     //condicion para ver si estamos dentro de la franja horaria o sea cuando nuestro parque esta abierto
     if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
 
@@ -291,42 +268,38 @@ while ($fechaInicio < $fechaFinal) {
                 $LinkinPark->agregarpersonas();
             }
         }
-       
     } 
     //finalizar dia dejando los ingresos del dia en 0 y el arreglo de personas en 0
      if($fechaInicio->format('H:i') == '02:00'){ 
-        /* $array []= $LinkinPark->personas; */
          $LinkinPark->finDia();
         } 
+        //verficamos si el arreglo de personas no esta vacio e invocamos el metodo asignar personas
         if(!empty($LinkinPark->personas)){
         $LinkinPark->asignar_personas_cola();
         }
-
       // Correr los juegos
       for ($i=0; $i < 3; $i++) { 
-         if(count($LinkinPark->juegosGrandes[$i]->cola)> 19 && count($LinkinPark->juegosGrandes[$i]->cola) < 31){
+         if(count($LinkinPark->juegosGrandes[$i]->cola) >= 20 && count($LinkinPark->juegosGrandes[$i]->cola) <= 30){
         $LinkinPark->correrJuegos('grandes',$i);
+        $LinkinPark->mantenimiento($fechaInicio->format('d'),$i);
       }
       }
-     
       for ($i=0; $i < 5; $i++) { 
-        if(count($LinkinPark->juegosMedianos[$i]->cola)> 9 && count($LinkinPark->juegosMedianos[$i]->cola) < 21){
+        if(count($LinkinPark->juegosMedianos[$i]->cola) > 9 && count($LinkinPark->juegosMedianos[$i]->cola) < 21){
        $LinkinPark->correrJuegos('medianos',$i);
+       $LinkinPark->mantenimiento($fechaInicio->format('d'),$i);
      }
      }
      for ($i=0; $i < 7; $i++) { 
         if(count($LinkinPark->juegosChicos[$i]->cola)> 4 && count($LinkinPark->juegosChicos[$i]->cola) < 11){
        $LinkinPark->correrJuegos('medianos',$i);
+       $LinkinPark->mantenimiento($fechaInicio->format('d'),$i);
      }
      }
-      
-      $LinkinPark->mantenimiento($fechaInicio->format('d'));
 
-    // Incrementa 1 minuto
+    // Incrementa 1 minuto 
     $fechaInicio->modify('+1 minute');
-
 }
 
-$LinkinPark->mantenimiento($fechaInicio->format('d'));
 var_dump($LinkinPark->personas);
 ?>
