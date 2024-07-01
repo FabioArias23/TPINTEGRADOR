@@ -300,7 +300,7 @@ while ($fechaInicio < $fechaFinal) {
     if ($LinkinPark->juegosGrandes[$i]->diasUso == 5){
    
         $LinkinPark->juegosGrandes[$i]->enMantenimiento = true;
-        if ( $fechaInicio->format('w') == 1 && $fechaInicio->format('w') == 2){
+        if ( $fechaInicio->format('w') == 1 || $fechaInicio->format('w') == 2){
         if(empty($fechaMantenimientoFinal)){
 
             $fechaMantenimientoFinal = clone $fechaInicio;
@@ -332,7 +332,7 @@ if(!empty($LinkinPark->personas)){
     }
     if ($LinkinPark->juegosMedianos[$i]->diasUso == 5){
         $LinkinPark->juegosMedianos[$i]->enMantenimiento = true;
-        if ( $fechaInicio->format('w') == 1 && $fechaInicio->format('w') == 2 && $fechaInicio->format('w') == 3){
+        if ( $fechaInicio->format('w') == 1 || $fechaInicio->format('w') == 2 || $fechaInicio->format('w') == 3){
         if(empty($fechaMantenimientoFinal)){
 
             $fechaMantenimientoFinal = clone $fechaInicio;
@@ -362,7 +362,7 @@ if(!empty($LinkinPark->personas)){
     }
     if ($LinkinPark->juegosChicos[$i]->diasUso == 5){
         $LinkinPark->juegosChicos[$i]->enMantenimiento = true;
-        if ( $fechaInicio->format('w') == 1 && $fechaInicio->format('w') == 2 && $fechaInicio->format('w') == 3 && $fechaInicio->format('w') == 4){
+        if ( $fechaInicio->format('w') == 1 || $fechaInicio->format('w') == 2 || $fechaInicio->format('w') == 3 || $fechaInicio->format('w') == 4){
         if(empty($fechaMantenimientoFinal)){
             $fechaMantenimientoFinal = clone $fechaInicio;
             $fechaMantenimientoFinal->modify('+1 day');
