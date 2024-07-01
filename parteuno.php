@@ -144,7 +144,6 @@ Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
         for($i = 0; $i < 25; $i++){
             $this->empleados[$i]->sueldos [] = 700; 
     }
-}   public function cronometro(){
 
 }
     //metodo para darte el fin del dia por la cola
