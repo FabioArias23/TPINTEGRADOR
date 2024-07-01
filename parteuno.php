@@ -263,6 +263,7 @@ $Cierre = 2;
 $dado;
 $array = [];
 $cont = 0;
+$tiempotardanzapersonas;
 //Simulamos el tiempo minuto a minuto
 while ($fechaInicio < $fechaFinal) {
     $horaActual = (int) $fechaInicio->format('H');//(int) operador de casting 
@@ -270,7 +271,8 @@ while ($fechaInicio < $fechaFinal) {
     //condicion para ver si estamos dentro de la franja horaria o sea cuando nuestro parque esta abierto
     if ($horaActual >= $Apertura || $horaActual <= $Cierre) {
         //Simulamos la llegada de personas en la primera tanda de 0 a 5 cada 10 min
-        if ($horaActual >= 15 && $horaActual <= 20 && $minutos % 10 == 0) { //operador de modulo "%", nos devuelve el resto de una division.
+        if ($horaActual >= 15 && $horaActual <= 20 && $minutos % 10 == 0) {
+             //operador de modulo "%", nos devuelve el resto de una division.
             $dado = random_int(0, 5);
             for ($i=0; $i < $dado; $i++) { 
                 $LinkinPark->agregarpersonas();
@@ -287,49 +289,32 @@ while ($fechaInicio < $fechaFinal) {
             }
         }
 
-         // Correr los juegos
+         // Correr los juegos grandes
     for ($i=0; $i < 3; $i++) { 
         if(count($LinkinPark->juegosGrandes[$i]->cola) >= 20 && count($LinkinPark->juegosGrandes[$i]->cola) <= 30){
-            $tiempotardansapersonas = clone $fechaInicio;
-            $tiempoaleatorio = (count($LinkinPark->juegosGrandes[$i]->cola)*random_int(1,3))/5;
+            if(empty($tiempotardanzapersonas)){
+            $tiempotardanzapersonas = clone $fechaInicio;
+            var_dump($tiempotardanzapersonas);
+            $tiempoaleatorio = intval((((count($LinkinPark->juegosGrandes[$i]->cola)/5))*random_int(1,3))*2);
             var_dump($tiempoaleatorio);
-            $tiempotardansapersonas->modify("+$tiempoaleatorio min");
-            if((int)$fechaInicio->format('i') >= (int)$tiempotardansapersonas->format('i')){
-                $LinkinPark->correrJuegos('grandes',$i);
+            $tiempotardanzapersonas->modify("+$tiempoaleatorio minutes");
             }
-        
-            if ($LinkinPark->juegosGrandes[$i]->diasDeUso == 5){
-            if ($LinkinPark->juegosGrandes[$i]->enMantenimiento) {
-                $fechaMantenimientoFinal = clone $fechaInicio;
-                $fechaMantenimientoFinal->modify('+3 day');
-            if ($fechaInicio >= $fechaMantenimientoFinal) {
-                  $LinkinPark->juegosGrandes[$i]->enMantenimiento = false;
-                     $LinkinPark->juegosGrandes[$i]->diasUso = 0; 
-        }
-    }
-     if ($LinkinPark->juegosMediano[$i]->diasDeUso == 5){
-        if ($LinkinPark->juegosMediano[$i]->enMantenimiento) {
-            $fechaMantenimientoFinal = clone $fechaInicio;
-               $fechaMantenimientoFinal->modify('+2 day');
-           if ($fechaInicio >= $fechaMantenimientoFinal) {
-                 $LinkinPark->juegosMediano[$i]->enMantenimiento = false;
-                    $LinkinPark->juegosMediano[$i]->diasUso = 0; 
-       }
-   }
-     if ($LinkinPark->juegosChicos[$i]->diasDeUso == 5){
-            if ($LinkinPark->juegosChicos[$i]->enMantenimiento) {
-                 $fechaMantenimientoFinal = clone $fechaInicio;
-                 $fechaMantenimientoFinal->modify('+1 day');
-       if ($fechaInicio >= $fechaMantenimientoFinal) {
-             $LinkinPark->juegosChicos[$i]->enMantenimiento = false;
-                $LinkinPark->juegosChicos[$i]->diasUso = 0; 
-   }
-}
-    }
-}
-}
+            if($fechaInicio->format('i') == $tiempotardanzapersonas->format('i')){
+                $tiempotardanzapersonas->modify('+5 minutes');
+                if($fechaInicio >= $tiempotardanzapersonas){
+                    $LinkinPark->correrJuegos('grandes',$i);
+                }
+            }
+
+            if($LinkinPark->juegosGrandes[$i]->diasUso == 5){
+                $LinkinPark->juegosGrandes[$i]->enMantenimiento = true;
+                if($fechaInicio->format('H:i')== "02:00"){
+                    $LinkinPark->cronometro();
+                }
+            }
     }
     }
+    //juegos medianos
     for ($i=0; $i < 5; $i++) { 
     if(count($LinkinPark->juegosMedianos[$i]->cola) >= 10 && count($LinkinPark->juegosMedianos[$i]->cola) <= 20){
 
@@ -337,6 +322,7 @@ while ($fechaInicio < $fechaFinal) {
     
     }
     }
+    //juegos pequeños
     for ($i=0; $i < 7; $i++) { 
     if(count($LinkinPark->juegosChicos[$i]->cola) >= 5 && count($LinkinPark->juegosChicos[$i]->cola) <= 10){
 
