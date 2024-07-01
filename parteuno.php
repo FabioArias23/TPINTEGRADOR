@@ -142,7 +142,7 @@ Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
         $totalSueldos = count($this->empleados) * 700;
         $this->caja -= $totalSueldos;
         for($i = 0; $i < 25; $i++){
-            $this->empleados[$i]->sueldos [] = $this->empleados[$i]->sueldos; 
+            $this->empleados[$i]->sueldos [] = 700; 
     }
 }   public function cronometro(){
 
@@ -260,7 +260,7 @@ $fechaFinal = clone $fechaInicio;
 $findemes = clone $fechaInicio;
 $findemes->modify('1 month');
 $ParaActualizarMantenimiento = clone $fechaInicio;
-$fechaFinal->modify('+2 month');
+$fechaFinal->modify('+1 year');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
@@ -367,27 +367,26 @@ if(!empty($LinkinPark->personas)){
     
     //finalizar dia dejando los ingresos del dia en 0 y el arreglo de personas en 0 y verificando que juego se ejecuto asi sumarle un dia de uso
     if($fechaInicio->format('H:i') == '02:00'){
-        echo "caja diaria: " . $LinkinPark->ingresodia . "<br>";
+        echo "<br>"."caja diaria: " . $LinkinPark->ingresodia . "<br>";
     $LinkinPark->finDia();
     } 
     //caja semanal 
     if($fechaInicio->format('w') == 6){
         if($fechaInicio->format('H:i') == '02:00'){ 
-        echo 'la Caja semanal es: ' . $LinkinPark->cajaSemanal . '<br>';
+        echo "<br>".'la Caja semanal es: ' . $LinkinPark->cajaSemanal . '<br>';
         $LinkinPark->cajaSemanal = 0;
             } 
-        
         } 
      //verficamos si el arreglo de personas no esta vacio e invocamos el metodo asignar personas donde se evalua si la persona esta disponible 
      //y si la persona tiene suficiente platita para entrar al algun juego
     if($fechaInicio >= $findemes){
         $LinkinPark->pagarSueldos();
-        echo '<br>' . "El balance mensual es:" . $LinkinPark->caja;
+        echo '<br>' . "El balance mensual es:" . $LinkinPark->caja . '<br>';
         $findemes->modify('+1 month');
+        var_dump($LinkinPark->empleados[0]);
     }
     // Incrementa 1 minuto
     $fechaInicio->modify('+1 minute');
-
     }
 }
 var_dump($LinkinPark->caja);
