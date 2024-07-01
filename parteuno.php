@@ -174,6 +174,7 @@ Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
 class JuegosGrandes {
     public $cola = [];
     public $nombre;
+    public $fechaInicioMantenimiento = 0;
     public $duracion = 5;
     public $diasdemantenimiento = 3;
     public $capacidadmin = 20;
@@ -190,6 +191,7 @@ class JuegosGrandes {
 class JuegosMedianos {
     public $cola = [];
     public $nombre;
+    public $fechaInicioMantenimiento = 0;
     public $diasdemantenimiento = 2;
     public $duracion = 7;
     public $capacidadmin = 10;
@@ -206,7 +208,8 @@ class JuegosMedianos {
 class JuegosPequeños {
     public $cola = [];
     public $nombre;
-    public $diasdemantenimiento = 1;
+    public $fechaInicioMantenimiento = 0;
+    public $mantenimiento = 1;
     public $duracion = 10;
     public $capacidadmin = 5;
     public $capacidadmax = 10;
@@ -253,6 +256,7 @@ $LinkinPark->agregarEmpleado(25);
 $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
+$ParaActualizarMantenimiento = clone $fechaInicio;
 $fechaFinal->modify('+3 day');
 $Apertura = 15;
 $Cierre = 2;
@@ -302,7 +306,6 @@ while ($fechaInicio < $fechaFinal) {
                 }
             }
 
-            
             if($LinkinPark->juegosGrandes[$i]->diasUso == 5){
                 $LinkinPark->juegosGrandes[$i]->enMantenimiento = true;
                 if($fechaInicio->format('H:i')== "02:00"){
@@ -326,7 +329,7 @@ while ($fechaInicio < $fechaFinal) {
             $LinkinPark->correrJuegos('chicos',$i);
     }
     }
-    }
+    
     if($fechaInicio->format('H:i') == '01:59'){ 
         var_dump($LinkinPark->personas);
         } 
@@ -341,7 +344,7 @@ while ($fechaInicio < $fechaFinal) {
     }
     // Incrementa 1 minuto
     $fechaInicio->modify('+1 minute');
-}
+
 var_dump($LinkinPark->caja);
 
 ?>
