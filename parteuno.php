@@ -174,7 +174,7 @@ Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
 class JuegosGrandes {
     public $cola = [];
     public $nombre;
-    public $fechaInicioMantenimiento = 0;
+    
     public $duracion = 5;
     public $diasdemantenimiento = 3;
     public $capacidadmin = 20;
@@ -191,7 +191,7 @@ class JuegosGrandes {
 class JuegosMedianos {
     public $cola = [];
     public $nombre;
-    public $fechaInicioMantenimiento = 0;
+    
     public $diasdemantenimiento = 2;
     public $duracion = 7;
     public $capacidadmin = 10;
@@ -208,7 +208,7 @@ class JuegosMedianos {
 class JuegosPequeños {
     public $cola = [];
     public $nombre;
-    public $fechaInicioMantenimiento = 0;
+    
     public $mantenimiento = 1;
     public $duracion = 10;
     public $capacidadmin = 5;
@@ -297,35 +297,29 @@ while ($fechaInicio < $fechaFinal) {
             if((int)$fechaInicio->format('i') >= (int)$tiempotardansapersonas->format('i')){
                 $LinkinPark->correrJuegos('grandes',$i);
             }
-        // Verificar si han pasado 3 días desde que el juego te entrega la cola en mantenimiento
-         //silencie al pete de marce porque me desconcentra
-         //si hay 7 dias y sabado y domingo tiene que usarse si o si . Y el mantenimiento es de 3 dias
-         //entonces resto 7-3
-         // hago 7-3 == 4
-            if ($LinkinPark->juegosGrandes[$i]->diasDeUso == 4){
-         if ($LinkinPark->juegosGrandes[$i]->enMantenimiento) {
-                $fechaMantenimientoFinal = clone $LinkinPark->juegosGrandes[$i]->fechaInicioMantenimiento;
-                $fechaMantenimientoFinal->modify('+5 day');
+        
+            if ($LinkinPark->juegosGrandes[$i]->diasDeUso == 5){
+            if ($LinkinPark->juegosGrandes[$i]->enMantenimiento) {
+                $fechaMantenimientoFinal = clone $fechaInicio;
+                $fechaMantenimientoFinal->modify('+3 day');
             if ($fechaInicio >= $fechaMantenimientoFinal) {
                   $LinkinPark->juegosGrandes[$i]->enMantenimiento = false;
                      $LinkinPark->juegosGrandes[$i]->diasUso = 0; 
         }
-    }//si hay 7 dias y sabado y domingo tiene que usarse si o si . Y el mantenimiento es de 3 dias
-         //entonces resto 7-3
-         // hago 7-2 == 5
-    if ($LinkinPark->juegosMediano[$i]->diasDeUso == 5){
+    }
+     if ($LinkinPark->juegosMediano[$i]->diasDeUso == 5){
         if ($LinkinPark->juegosMediano[$i]->enMantenimiento) {
-               $fechaMantenimientoFinal = clone $LinkinPark->juegosMediano[$i]->fechaInicioMantenimiento;
-               $fechaMantenimientoFinal->modify('+3 day');
+            $fechaMantenimientoFinal = clone $fechaInicio;
+               $fechaMantenimientoFinal->modify('+2 day');
            if ($fechaInicio >= $fechaMantenimientoFinal) {
                  $LinkinPark->juegosMediano[$i]->enMantenimiento = false;
                     $LinkinPark->juegosMediano[$i]->diasUso = 0; 
        }
    }
-   if ($LinkinPark->juegosChicos[$i]->diasDeUso == 6){
-    if ($LinkinPark->juegosChicos[$i]->enMantenimiento) {
-           $fechaMantenimientoFinal = clone $LinkinPark->juegosChicos[$i]->fechaInicioMantenimiento;
-           $fechaMantenimientoFinal->modify('+1 day');
+     if ($LinkinPark->juegosChicos[$i]->diasDeUso == 5){
+            if ($LinkinPark->juegosChicos[$i]->enMantenimiento) {
+                 $fechaMantenimientoFinal = clone $fechaInicio;
+                 $fechaMantenimientoFinal->modify('+1 day');
        if ($fechaInicio >= $fechaMantenimientoFinal) {
              $LinkinPark->juegosChicos[$i]->enMantenimiento = false;
                 $LinkinPark->juegosChicos[$i]->diasUso = 0; 
