@@ -257,8 +257,10 @@ $LinkinPark->agregarEmpleado(25);
 $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
+$findemes = clone $fechaInicio;
+$findemes->modify('1 month');
 $ParaActualizarMantenimiento = clone $fechaInicio;
-$fechaFinal->modify('+8 day');
+$fechaFinal->modify('+2 month');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
@@ -314,10 +316,12 @@ while ($fechaInicio < $fechaFinal) {
                 }
     }
 }
+if(!empty($LinkinPark->personas)){
+    $LinkinPark->asignar_personas_cola();
+}
     //juegos medianos
     for ($i=0; $i < 5; $i++) { 
     if(count($LinkinPark->juegosMedianos[$i]->cola) >= 10 && count($LinkinPark->juegosMedianos[$i]->cola) <= 20){
-
         if(empty($tiempotardanzapersonas)){
             $tiempotardanzapersonas = clone $fechaInicio;
             $tiempoaleatorio = intval((((count($LinkinPark->juegosMedianos[$i]->cola)/5))*random_int(1,3))*2)+7;
@@ -346,7 +350,7 @@ while ($fechaInicio < $fechaFinal) {
             $tiempotardanzapersonas->modify("+$tiempoaleatorio minutes");
             }
             if($fechaInicio >= $tiempotardanzapersonas){
-                    $LinkinPark->correrJuegos('grandes',$i);
+                    $LinkinPark->correrJuegos('chicos',$i);
                     $tiempotardanzapersonas = null;
                 }
     }
@@ -376,8 +380,10 @@ while ($fechaInicio < $fechaFinal) {
         } 
      //verficamos si el arreglo de personas no esta vacio e invocamos el metodo asignar personas donde se evalua si la persona esta disponible 
      //y si la persona tiene suficiente platita para entrar al algun juego
-    if(!empty($LinkinPark->personas)){
-        $LinkinPark->asignar_personas_cola();
+    if($fechaInicio >= $findemes){
+        $LinkinPark->pagarSueldos();
+        echo '<br>' . "El balance mensual es:" . $LinkinPark->caja;
+        $findemes->modify('+1 month');
     }
     // Incrementa 1 minuto
     $fechaInicio->modify('+1 minute');
