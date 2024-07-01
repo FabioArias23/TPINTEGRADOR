@@ -257,13 +257,12 @@ $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
 $ParaActualizarMantenimiento = clone $fechaInicio;
-$fechaFinal->modify('+3 day');
+$fechaFinal->modify('+1 day');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
-$array = [];
 $cont = 0;
-$tiempotardanzapersonas;
+$tiempotardanzapersonas = null;
 //Simulamos el tiempo minuto a minuto
 while ($fechaInicio < $fechaFinal) {
     $horaActual = (int) $fechaInicio->format('H');//(int) operador de casting 
@@ -288,32 +287,35 @@ while ($fechaInicio < $fechaFinal) {
                 $LinkinPark->agregarpersonas();
             }
         }
+    }
+    
 
          // Correr los juegos grandes
     for ($i=0; $i < 3; $i++) { 
         if(count($LinkinPark->juegosGrandes[$i]->cola) >= 20 && count($LinkinPark->juegosGrandes[$i]->cola) <= 30){
             if(empty($tiempotardanzapersonas)){
             $tiempotardanzapersonas = clone $fechaInicio;
-            var_dump($tiempotardanzapersonas);
-            $tiempoaleatorio = intval((((count($LinkinPark->juegosGrandes[$i]->cola)/5))*random_int(1,3))*2);
-            var_dump($tiempoaleatorio);
+            $tiempoaleatorio = intval((((count($LinkinPark->juegosGrandes[$i]->cola)/5))*random_int(1,3))*2)+5;
             $tiempotardanzapersonas->modify("+$tiempoaleatorio minutes");
             }
-            if($fechaInicio->format('i') == $tiempotardanzapersonas->format('i')){
-                $tiempotardanzapersonas->modify('+5 minutes');
-                if($fechaInicio >= $tiempotardanzapersonas){
+            if($fechaInicio >= $tiempotardanzapersonas){
+                    var_dump($tiempotardanzapersonas);
                     $LinkinPark->correrJuegos('grandes',$i);
+                    $tiempotardanzapersonas = null;
                 }
-            }
-
-            if($LinkinPark->juegosGrandes[$i]->diasUso == 5){
-                $LinkinPark->juegosGrandes[$i]->enMantenimiento = true;
-                if($fechaInicio->format('H:i')== "02:00"){
-                    $LinkinPark->cronometro();
+            
+    }     
+    if ($LinkinPark->juegosGrandes[$i]->diasUso == 5){
+                    if ($LinkinPark->juegosGrandes[$i]->enMantenimiento) {
+                        $fechaMantenimientoFinal = clone $fechaInicio;
+                        $fechaMantenimientoFinal->modify('+3 day');
+                    if ($fechaInicio >= $fechaMantenimientoFinal) {
+                        $LinkinPark->juegosGrandes[$i]->enMantenimiento = false;
+                            $LinkinPark->juegosGrandes[$i]->diasUso = 0; 
                 }
             }
     }
-    }
+}
     //juegos medianos
     for ($i=0; $i < 5; $i++) { 
     if(count($LinkinPark->juegosMedianos[$i]->cola) >= 10 && count($LinkinPark->juegosMedianos[$i]->cola) <= 20){
@@ -321,15 +323,33 @@ while ($fechaInicio < $fechaFinal) {
         $LinkinPark->correrJuegos('medianos',$i);
     
     }
+    if ($LinkinPark->juegosMedianos[$i]->diasUso == 5){
+        if ($LinkinPark->juegosMedianos[$i]->enMantenimiento) {
+            $fechaMantenimientoFinal = clone $fechaInicio;
+            $fechaMantenimientoFinal->modify('+2 day');
+        if ($fechaInicio >= $fechaMantenimientoFinal) {
+            $LinkinPark->juegosMedianos[$i]->enMantenimiento = false;
+                    $LinkinPark->juegosMedianos[$i]->diasUso = 0; 
+        }
     }
+}
     //juegos pequeños
     for ($i=0; $i < 7; $i++) { 
     if(count($LinkinPark->juegosChicos[$i]->cola) >= 5 && count($LinkinPark->juegosChicos[$i]->cola) <= 10){
 
             $LinkinPark->correrJuegos('chicos',$i);
     }
+    if ($LinkinPark->juegosChicos[$i]->diasUso == 5){
+        if ($LinkinPark->juegosChicos[$i]->enMantenimiento) {
+            $fechaMantenimientoFinal = clone $fechaInicio;
+            $fechaMantenimientoFinal->modify('+2 day');
+        if ($fechaInicio >= $fechaMantenimientoFinal) {
+            $LinkinPark->juegosChicos[$i]->enMantenimiento = false;
+                    $LinkinPark->juegosChicos[$i]->diasUso = 0; 
+        }
     }
-    
+    }
+}   
     if($fechaInicio->format('H:i') == '01:59'){ 
         var_dump($LinkinPark->personas);
         } 
@@ -345,7 +365,7 @@ while ($fechaInicio < $fechaFinal) {
     // Incrementa 1 minuto
     $fechaInicio->modify('+1 minute');
 
-var_dump($LinkinPark->caja);
     }
 }
+var_dump($LinkinPark->caja);
 ?>
