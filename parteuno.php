@@ -175,11 +175,6 @@ Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
 class JuegosGrandes {
     public $cola = [];
     public $nombre;
-    
-    public $duracion = 5;
-    public $diasdemantenimiento = 3;
-    public $capacidadmin = 20;
-    public $capacidadmax = 30;
     public $diasUso = 0;
     public $enMantenimiento = false;
     public $En_uso = false;
@@ -192,11 +187,6 @@ class JuegosGrandes {
 class JuegosMedianos {
     public $cola = [];
     public $nombre;
-    
-    public $diasdemantenimiento = 2;
-    public $duracion = 7;
-    public $capacidadmin = 10;
-    public $capacidadmax = 20;
     public $precio = 15;
     public $diasUso = 0;
     public $seuso = false;
@@ -208,11 +198,7 @@ class JuegosMedianos {
 }
 class JuegosPequeños {
     public $cola = [];
-    public $nombre;
-    public $mantenimiento = 1;
-    public $duracion = 10;
-    public $capacidadmin = 5;
-    public $capacidadmax = 10;
+    public $nombre;  
     public $precio = 10;
     public $diasUso = 0;
     public $seuso = false;
@@ -258,12 +244,13 @@ $fechaInicio = new DateTime('2024-06-01 15:00:00');
 $fechaFinal = clone $fechaInicio;
 $findemes = clone $fechaInicio;
 $findemes->modify('1 month');
-$ParaActualizarMantenimiento = clone $fechaInicio;
+
 $fechaFinal->modify('+1 year');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
 $cont = 0;
+$fechaMantenimientoFinal = null;
 $tiempotardanzapersonas = null;
 //Simulamos el tiempo minuto a minuto
 while ($fechaInicio < $fechaFinal) {
@@ -293,13 +280,17 @@ while ($fechaInicio < $fechaFinal) {
     
 
          // Correr los juegos grandes
-    for ($i=0; $i < 3; $i++) { 
+    for ($i=0; $i <count($LinkinPark->juegosGrandes); $i++) {
+        //si alguno de los juegos se cumple la condicion que tiene la cola llena. si alguno de los juegos cumple la condicion 
+        //entre 20 y 30 persona, hacemos correr el juego 
         if(count($LinkinPark->juegosGrandes[$i]->cola) >= 20 && count($LinkinPark->juegosGrandes[$i]->cola) <= 30){
             if(empty($tiempotardanzapersonas)){
             $tiempotardanzapersonas = clone $fechaInicio;
+            //el grupo de 5 persona tarda en tre 1  y 3 minutos entonces , simula el tiempo en que tarda en ejecutarse  
             $tiempoaleatorio = intval((((count($LinkinPark->juegosGrandes[$i]->cola)/5))*random_int(1,3))*2)+5;
             $tiempotardanzapersonas->modify("+$tiempoaleatorio minutes");
             }
+           
             if($fechaInicio >= $tiempotardanzapersonas){
                     $LinkinPark->correrJuegos('grandes',$i);
                     $tiempotardanzapersonas = null;
@@ -307,19 +298,27 @@ while ($fechaInicio < $fechaFinal) {
             
     }     
     if ($LinkinPark->juegosGrandes[$i]->diasUso == 5){
-                        $fechaMantenimientoFinal = clone $fechaInicio;
-                        $fechaMantenimientoFinal->modify('+3 day');
-                    if ($fechaInicio >= $fechaMantenimientoFinal) {
+   
+        $LinkinPark->juegosGrandes[$i]->enMantenimiento = true;
+        if ( $fechaInicio->format('w') == 1 && $fechaInicio->format('w') == 2){
+        if(empty($fechaMantenimientoFinal)){
+
+            $fechaMantenimientoFinal = clone $fechaInicio;
+            $fechaMantenimientoFinal->modify('+3 day');
+        }
+                    if ($fechaInicio >= $fechaMantenimientoFinal  ) {
                         $LinkinPark->juegosGrandes[$i]->enMantenimiento = false;
                             $LinkinPark->juegosGrandes[$i]->diasUso = 0; 
+                            $fechaMantenimientoFinal = null;
                 }
     }
+}
 }
 if(!empty($LinkinPark->personas)){
     $LinkinPark->asignar_personas_cola();
 }
     //juegos medianos
-    for ($i=0; $i < 5; $i++) { 
+    for ($i=0; $i <count($LinkinPark->juegosMedianos); $i++) { 
     if(count($LinkinPark->juegosMedianos[$i]->cola) >= 10 && count($LinkinPark->juegosMedianos[$i]->cola) <= 20){
         if(empty($tiempotardanzapersonas)){
             $tiempotardanzapersonas = clone $fechaInicio;
@@ -332,15 +331,22 @@ if(!empty($LinkinPark->personas)){
                 }
     }
     if ($LinkinPark->juegosMedianos[$i]->diasUso == 5){
+        $LinkinPark->juegosMedianos[$i]->enMantenimiento = true;
+        if ( $fechaInicio->format('w') == 1 && $fechaInicio->format('w') == 2 && $fechaInicio->format('w') == 3){
+        if(empty($fechaMantenimientoFinal)){
+
             $fechaMantenimientoFinal = clone $fechaInicio;
             $fechaMantenimientoFinal->modify('+2 day');
+        }
         if ($fechaInicio >= $fechaMantenimientoFinal) {
             $LinkinPark->juegosMedianos[$i]->enMantenimiento = false;
                     $LinkinPark->juegosMedianos[$i]->diasUso = 0; 
+                    $fechaMantenimientoFinal = null;
         }
+    }
 }
     //juegos pequeños
-    for ($i=0; $i < 7; $i++) { 
+    for ($i=0; $i < count($LinkinPark->juegosChicos); $i++) { 
     if(count($LinkinPark->juegosChicos[$i]->cola) >= 5 && count($LinkinPark->juegosChicos[$i]->cola) <= 10){
 
         if(empty($tiempotardanzapersonas)){
@@ -351,16 +357,23 @@ if(!empty($LinkinPark->personas)){
             if($fechaInicio >= $tiempotardanzapersonas){
                     $LinkinPark->correrJuegos('chicos',$i);
                     $tiempotardanzapersonas = null;
+                   
                 }
     }
     if ($LinkinPark->juegosChicos[$i]->diasUso == 5){
+        $LinkinPark->juegosChicos[$i]->enMantenimiento = true;
+        if ( $fechaInicio->format('w') == 1 && $fechaInicio->format('w') == 2 && $fechaInicio->format('w') == 3 && $fechaInicio->format('w') == 4){
+        if(empty($fechaMantenimientoFinal)){
             $fechaMantenimientoFinal = clone $fechaInicio;
-            $fechaMantenimientoFinal->modify('+2 day');
+            $fechaMantenimientoFinal->modify('+1 day');
+        }
+
         if ($fechaInicio >= $fechaMantenimientoFinal) {
             $LinkinPark->juegosChicos[$i]->enMantenimiento = false;
                     $LinkinPark->juegosChicos[$i]->diasUso = 0; 
+                    $fechaMantenimientoFinal = null;
         }
-    
+        }
     }
 }   
     
