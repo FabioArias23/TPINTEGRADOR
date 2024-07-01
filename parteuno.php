@@ -346,5 +346,6 @@ while ($fechaInicio < $fechaFinal) {
     $fechaInicio->modify('+1 minute');
 
 var_dump($LinkinPark->caja);
-
+    }
+}
 ?>
