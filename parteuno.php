@@ -25,6 +25,7 @@ class Parque_Diversiones{
     public $empleados = [];
     public $ingresodia;
     public $caja;
+    public $cajaSemanal;
     public function agreagar_juego_grande($nombre){
         $this->juegosGrandes []= new JuegosGrandes($nombre);
     }
@@ -149,6 +150,7 @@ Itera sobre los juegos seleccionados y verifica si no están en mantenimiento.
     //metodo para darte el fin del dia por la cola
     public function finDia() {
         $this->caja += $this->ingresodia;
+        $this->cajaSemanal += $this->ingresodia;
         $this->ingresodia = 0;
         $this->personas = [];
         for ($i=0; $i < 3; $i++) { 
@@ -208,7 +210,6 @@ class JuegosMedianos {
 class JuegosPequeños {
     public $cola = [];
     public $nombre;
-    
     public $mantenimiento = 1;
     public $duracion = 10;
     public $capacidadmin = 5;
@@ -257,7 +258,7 @@ $fechaInicio = new DateTime('2024-06-01 15:00:00');
 //Establecer la fecha final (agregamos 1 mes a la fecha de inicio)
 $fechaFinal = clone $fechaInicio;
 $ParaActualizarMantenimiento = clone $fechaInicio;
-$fechaFinal->modify('+1 day');
+$fechaFinal->modify('+8 day');
 $Apertura = 15;
 $Cierre = 2;
 $dado;
@@ -299,64 +300,80 @@ while ($fechaInicio < $fechaFinal) {
             $tiempotardanzapersonas->modify("+$tiempoaleatorio minutes");
             }
             if($fechaInicio >= $tiempotardanzapersonas){
-                    var_dump($tiempotardanzapersonas);
                     $LinkinPark->correrJuegos('grandes',$i);
                     $tiempotardanzapersonas = null;
                 }
             
     }     
     if ($LinkinPark->juegosGrandes[$i]->diasUso == 5){
-                    if ($LinkinPark->juegosGrandes[$i]->enMantenimiento) {
                         $fechaMantenimientoFinal = clone $fechaInicio;
                         $fechaMantenimientoFinal->modify('+3 day');
                     if ($fechaInicio >= $fechaMantenimientoFinal) {
                         $LinkinPark->juegosGrandes[$i]->enMantenimiento = false;
                             $LinkinPark->juegosGrandes[$i]->diasUso = 0; 
                 }
-            }
     }
 }
     //juegos medianos
     for ($i=0; $i < 5; $i++) { 
     if(count($LinkinPark->juegosMedianos[$i]->cola) >= 10 && count($LinkinPark->juegosMedianos[$i]->cola) <= 20){
 
-        $LinkinPark->correrJuegos('medianos',$i);
-    
+        if(empty($tiempotardanzapersonas)){
+            $tiempotardanzapersonas = clone $fechaInicio;
+            $tiempoaleatorio = intval((((count($LinkinPark->juegosMedianos[$i]->cola)/5))*random_int(1,3))*2)+7;
+            $tiempotardanzapersonas->modify("+$tiempoaleatorio minutes");
+            }
+            if($fechaInicio >= $tiempotardanzapersonas){
+                    $LinkinPark->correrJuegos('medianos',$i);
+                    $tiempotardanzapersonas = null;
+                }
     }
     if ($LinkinPark->juegosMedianos[$i]->diasUso == 5){
-        if ($LinkinPark->juegosMedianos[$i]->enMantenimiento) {
             $fechaMantenimientoFinal = clone $fechaInicio;
             $fechaMantenimientoFinal->modify('+2 day');
         if ($fechaInicio >= $fechaMantenimientoFinal) {
             $LinkinPark->juegosMedianos[$i]->enMantenimiento = false;
                     $LinkinPark->juegosMedianos[$i]->diasUso = 0; 
         }
-    }
 }
     //juegos pequeños
     for ($i=0; $i < 7; $i++) { 
     if(count($LinkinPark->juegosChicos[$i]->cola) >= 5 && count($LinkinPark->juegosChicos[$i]->cola) <= 10){
 
-            $LinkinPark->correrJuegos('chicos',$i);
+        if(empty($tiempotardanzapersonas)){
+            $tiempotardanzapersonas = clone $fechaInicio;
+            $tiempoaleatorio = intval((((count($LinkinPark->juegosChicos[$i]->cola)/5))*random_int(1,3))*2)+10;
+            $tiempotardanzapersonas->modify("+$tiempoaleatorio minutes");
+            }
+            if($fechaInicio >= $tiempotardanzapersonas){
+                    $LinkinPark->correrJuegos('grandes',$i);
+                    $tiempotardanzapersonas = null;
+                }
     }
     if ($LinkinPark->juegosChicos[$i]->diasUso == 5){
-        if ($LinkinPark->juegosChicos[$i]->enMantenimiento) {
             $fechaMantenimientoFinal = clone $fechaInicio;
             $fechaMantenimientoFinal->modify('+2 day');
         if ($fechaInicio >= $fechaMantenimientoFinal) {
             $LinkinPark->juegosChicos[$i]->enMantenimiento = false;
                     $LinkinPark->juegosChicos[$i]->diasUso = 0; 
         }
-    }
+    
     }
 }   
-    if($fechaInicio->format('H:i') == '01:59'){ 
-        var_dump($LinkinPark->personas);
-        } 
+    
     //finalizar dia dejando los ingresos del dia en 0 y el arreglo de personas en 0 y verificando que juego se ejecuto asi sumarle un dia de uso
-    if($fechaInicio->format('H:i') == '02:00'){ 
+    if($fechaInicio->format('H:i') == '02:00'){
+        echo "caja diaria: " . $LinkinPark->ingresodia . "<br>";
     $LinkinPark->finDia();
     } 
+    //caja semanal 
+    if($fechaInicio->format('w') == 6){
+        if($fechaInicio->format('H:i') == '02:00'){ 
+        echo 'la Caja semanal es: ' . $LinkinPark->cajaSemanal . '<br>';
+        $LinkinPark->cajaSemanal = 0;
+            } 
+        
+        } 
      //verficamos si el arreglo de personas no esta vacio e invocamos el metodo asignar personas donde se evalua si la persona esta disponible 
      //y si la persona tiene suficiente platita para entrar al algun juego
     if(!empty($LinkinPark->personas)){
